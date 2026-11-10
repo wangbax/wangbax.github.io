@@ -1,0 +1,15 @@
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["ecs-workbench:LoginECSInstance", "ecs:StartTerminalSession"],
+      "Resource": "acs:ecs:cn-shanghai:1717475122021143:instance/i-uf6ftbyx1ay9g2noxktv"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["ecs:DescribeInstances", "ecs:DescribeCloudAssistantStatus", "ecs-workbench:ChatMessages", "ecs-workbench:EndSessions"],
+      "Resource": "*"
+    }
+  ]
+}
