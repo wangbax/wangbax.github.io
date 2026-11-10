@@ -29,6 +29,7 @@ jobs:
           node --check js/site.js
           node --check js/theme.js
           node --check js/planet.js
+          node scripts/test_planet.cjs
           node --check js/article.js
           node --input-type=module --check < js/search.js
       - name: Build and validate the site
