@@ -39,7 +39,7 @@ def main():
         members = archive.getmembers()
         names = {member.name for member in members}
         assert len(names) == len(members), "Duplicate files in archive"
-        assert {"index.html", "404.html", "css/site.css", "css/pages.css", "js/site.js", "js/planet.js", "search.xml"} <= names
+        assert {"index.html", "404.html", "css/site.css", "css/pages.css", "css/theme.css", "js/theme.js", "js/site.js", "js/planet.js", "search.xml"} <= names
         forbidden = {"scripts", "deploy", "content", ".git", ".github", ".release", "README.md", "CNAME"}
         for member in members:
             path = PurePosixPath(member.name)

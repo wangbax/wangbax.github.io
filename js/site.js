@@ -1,6 +1,35 @@
 (() => {
   'use strict';
 
+  const themePicker = document.querySelector('[data-theme-picker]');
+  if (themePicker && window.siteTheme) {
+    const trigger = themePicker.querySelector('summary');
+    const options = themePicker.querySelectorAll('[data-theme-option]');
+    const labels = { light: '明亮模式', dark: '夜间模式', system: '跟随系统' };
+    function syncThemePicker() {
+      const label = '外观模式：' + labels[window.siteTheme.mode];
+      trigger.setAttribute('aria-label', label);
+      trigger.title = label;
+      options.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.themeOption === window.siteTheme.mode)));
+    }
+    options.forEach(button => button.addEventListener('click', () => {
+      window.siteTheme.setMode(button.dataset.themeOption);
+      themePicker.open = false;
+      trigger.focus({ preventScroll: true });
+    }));
+    document.addEventListener('click', event => {
+      if (!themePicker.contains(event.target)) themePicker.open = false;
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && themePicker.open) {
+        themePicker.open = false;
+        trigger.focus({ preventScroll: true });
+      }
+    });
+    addEventListener('themechange', syncThemePicker);
+    syncThemePicker();
+  }
+
   let searchIndexPromise;
 
   function loadSearchIndex() {
@@ -85,6 +114,7 @@
   let searchOpener;
   function openSearch(opener) {
     if (!dialog || dialog.open) return;
+    if (themePicker) themePicker.open = false;
     searchOpener = opener || document.activeElement;
     dialog.showModal();
     dialog.querySelector('input').focus();
