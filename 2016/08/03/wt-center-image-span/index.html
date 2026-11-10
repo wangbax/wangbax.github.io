@@ -2,20 +2,64 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#faf7f1"><title>Android TextView头尾展示标签图片，并且尾部标签不被挤出 | wangbax</title>
-<script src="/js/theme.js?v=a8cae2d640bf"></script>
+<script>// Run before stylesheets so the first paint already uses the chosen appearance.
+(() => {
+  'use strict';
+  const key = 'wangbax.theme';
+  const modes = ['system', 'light', 'dark'];
+  const system = matchMedia('(prefers-color-scheme: dark)');
+  const root = document.documentElement;
+  let mode = 'system';
+  let storage;
+  try {
+    storage = localStorage;
+    const saved = storage.getItem(key);
+    if (modes.includes(saved)) mode = saved;
+  } catch { /* Storage may be disabled; switching still works for this page. */ }
+
+  function apply() {
+    const theme = mode === 'system' ? (system.matches ? 'dark' : 'light') : mode;
+    root.dataset.theme = theme;
+    root.dataset.themeMode = mode;
+    root.style.colorScheme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#25221f' : '#faf7f1');
+    dispatchEvent(new CustomEvent('themechange', { detail: { mode, theme } }));
+  }
+
+  window.siteTheme = {
+    get mode() { return mode; },
+    setMode(value) {
+      if (!modes.includes(value)) return;
+      mode = value;
+      try {
+        if (mode === 'system') storage?.removeItem(key);
+        else storage?.setItem(key, mode);
+      } catch { /* Keep the current page usable without persistent storage. */ }
+      apply();
+    }
+  };
+  system.addEventListener('change', () => { if (mode === 'system') apply(); });
+  addEventListener('storage', event => {
+    if (event.storageArea !== storage || (event.key !== key && event.key !== null)) return;
+    mode = modes.includes(event.newValue) ? event.newValue : 'system';
+    apply();
+  });
+  apply();
+})();
+</script>
 <meta name="description" content="开发中需要为TextView头尾添加标签图片，并且 尾部标签不被挤出 ，考虑了几种可能的方案："><meta name="author" content="wangbax">
-<link rel="canonical" href="https://www.wangbaxai.top/2016/08/03/wt-center-image-span/"><link rel="icon" type="image/png" href="/images/avatar.png">
+<link rel="canonical" href="https://www.wangbaxai.top/2016/08/03/wt-center-image-span/"><link rel="icon" type="image/webp" href="/images/optimized/avatar-64.webp?v=ee6ee8104a73">
 <meta property="og:type" content="article"><meta property="og:site_name" content="wangbax"><meta property="og:title" content="Android TextView头尾展示标签图片，并且尾部标签不被挤出"><meta property="og:description" content="开发中需要为TextView头尾添加标签图片，并且 尾部标签不被挤出 ，考虑了几种可能的方案："><meta property="og:url" content="https://www.wangbaxai.top/2016/08/03/wt-center-image-span/"><meta property="og:image" content="https://www.wangbaxai.top/images/avatar.png">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="Android TextView头尾展示标签图片，并且尾部标签不被挤出"><meta name="twitter:description" content="开发中需要为TextView头尾添加标签图片，并且 尾部标签不被挤出 ，考虑了几种可能的方案："><meta property="article:published_time" content="2016-08-03T14:39:22+08:00"><meta property="article:modified_time" content="2017-06-07T17:04:32+08:00">
-<link rel="stylesheet" href="/css/site.css?v=efffebc6faf0"><link rel="stylesheet" href="/css/pages.css?v=a4fce74a365a"><link rel="stylesheet" href="/css/theme.css?v=ba05d23a41b6"><script src="/js/site.js?v=796e7cb78eb4" defer></script>
-</head><body class="reading-page">
+<link rel="stylesheet" href="/css/app.css?v=e68d5460199b"><script src="/js/site.js?v=1059b6693d8c" defer></script><script src="/js/article.js?v=9bbefee4c352" defer></script>
+</head><body class="reading-page" data-search-module="/js/search.js?v=0b2beb899a01" data-search-index="/search.json?v=ece0bfddf346">
 <a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="wrap top">
-  <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="/images/avatar.png" width="29" height="29" alt="">wangbax</a>
+  <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="29px" width="29" height="29" alt="" loading="eager" decoding="async" fetchpriority="high">wangbax</a>
   <nav class="nav" aria-label="主导航"><a href="/#projects">项目</a><a href="/archives/" aria-current="page">文章</a><a href="/about/">关于</a><button class="search-trigger" type="button" data-open-search aria-label="搜索文章"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.5 4.5"/></svg></button><details class="theme-picker" data-theme-picker><summary aria-label="外观模式：跟随系统" title="外观模式：跟随系统"><span data-theme-icon="light"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></span><span data-theme-icon="dark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg></span><span data-theme-icon="system"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></span></summary><div class="theme-options" role="group" aria-label="外观模式"><button type="button" data-theme-option="light" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><span>明亮模式</span><span class="theme-check" aria-hidden="true">✓</span></button><button type="button" data-theme-option="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg><span>夜间模式</span><span class="theme-check" aria-hidden="true">✓</span></button><button type="button" data-theme-option="system" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg><span>跟随系统</span><span class="theme-check" aria-hidden="true">✓</span></button></div></details><a class="github desktop" href="https://github.com/wangbax" target="_blank" rel="noopener">GitHub ↗</a></nav>
 </div></header><div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>
 <main id="main" class="wrap article-main">
-<header class="article-hero"><div class="breadcrumb"><a href="/archives/">← 开发手记</a><span class="breadcrumb-separator" aria-hidden="true">/</span><span>Android</span></div><h1>Android TextView头尾展示标签图片，并且尾部标签不被挤出</h1><div class="article-meta"><a class="article-author" href="/about/"><img src="/images/avatar.png" width="30" height="30" alt=""><span>wangbax</span></a><time datetime="2016-08-03T14:39:22+08:00">2016-08-03</time><span>约 4 分钟</span><span class="article-updated">更新于 2017-06-07</span></div><svg class="article-sigil" viewBox="0 0 160 160" fill="none" aria-hidden="true"><circle cx="80" cy="80" r="44"/><ellipse cx="80" cy="80" rx="71" ry="22" transform="rotate(-30 80 80)"/><ellipse cx="80" cy="80" rx="63" ry="30" transform="rotate(34 80 80)"/><circle cx="133" cy="50" r="3" fill="currentColor"/></svg></header>
+<header class="article-hero"><div class="breadcrumb"><a href="/archives/">← 开发手记</a><span class="breadcrumb-separator" aria-hidden="true">/</span><span>Android</span></div><h1>Android TextView头尾展示标签图片，并且尾部标签不被挤出</h1><div class="article-meta"><a class="article-author" href="/about/"><img class="author-avatar" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="30px" width="30" height="30" alt="" loading="eager" decoding="async" fetchpriority="auto"><span>wangbax</span></a><time datetime="2016-08-03T14:39:22+08:00">2016-08-03</time><span>约 4 分钟</span><span class="article-updated">更新于 2017-06-07</span></div><svg class="article-sigil" viewBox="0 0 160 160" fill="none" aria-hidden="true"><circle cx="80" cy="80" r="44"/><ellipse cx="80" cy="80" rx="71" ry="22" transform="rotate(-30 80 80)"/><ellipse cx="80" cy="80" rx="63" ry="30" transform="rotate(34 80 80)"/><circle cx="133" cy="50" r="3" fill="currentColor"/></svg></header>
 <div class="reading-layout"><article class="article-column" aria-label="Android TextView头尾展示标签图片，并且尾部标签不被挤出"><details class="mobile-toc"><summary>本文目录 <span aria-hidden="true">＋</span></summary><nav aria-label="手机文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-1"><a href="#%E5%AF%B9%E6%AF%94">对比</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%BA%8C">方案二</a></li><li class="toc-level-2"><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89Span">自定义Span</a></li><li class="toc-level-2"><a href="#%E6%96%87%E6%9C%AC%E9%95%BF%E5%BA%A6%E9%97%AE%E9%A2%98">文本长度问题</a></li><li class="toc-level-2"><a href="#%E6%95%88%E6%9E%9C">效果</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%B8%89">方案三</a></li><li class="toc-level-0"><a href="#%E9%B8%A3%E8%B0%A2">鸣谢</a></li></ol></nav></details><div class="article-body" id="article-body"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>开发中需要为TextView头尾添加标签图片，并且<strong>尾部标签不被挤出</strong>，考虑了几种可能的方案：</p>
 <ol>
 <li>动态计算TextView的文本长度和每行的宽度</li>
@@ -29,7 +73,7 @@
 <li>第三种自己可以定制自己想实现的各种效果。但是适配性比较难保证。待定</li>
 </ul>
 <p>最后综合考虑，实验第二种是否能满足，如果不能满足，则使用第三种。</p>
-<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><h4 id="自定义Span"><a href="#自定义Span" class="headerlink" title="自定义Span"></a>自定义Span</h4><p>涉及到的类：<code>Paint.FontMetrics</code>，它表示绘制字体时的度量标准。<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html" target="_blank" rel="noopener">Google的官方api文档</a>对它的字段说明如下：<br><img src="/images/2016/20160803143922-1.png" alt="android imagespan fontmetrics"></p>
+<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><h4 id="自定义Span"><a href="#自定义Span" class="headerlink" title="自定义Span"></a>自定义Span</h4><p>涉及到的类：<code>Paint.FontMetrics</code>，它表示绘制字体时的度量标准。<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html" target="_blank" rel="noopener">Google的官方api文档</a>对它的字段说明如下：<br><picture><source type="image/webp" srcset="/images/optimized/2016/20160803143922-1-480.webp?v=f1f1e7ed33b9 480w, /images/optimized/2016/20160803143922-1-1023.webp?v=68affd84af85 1023w" sizes="(max-width: 650px) min(1023px, calc(100vw - 40px)), (max-width: 1000px) min(1023px, calc(100vw - 316px)), 760px"><img src="/images/2016/20160803143922-1.png?v=29b018012ffb" width="1023" height="600" style="aspect-ratio:1023/600" alt="android imagespan fontmetrics" loading="lazy" decoding="async" data-original="/images/2016/20160803143922-1.png?v=29b018012ffb"></picture></p>
 <ul>
 <li>ascent: 字体最上端到基线的距离，为负值。</li>
 <li>descent：字体最下端到基线的距离，为正值。</li>
@@ -42,12 +86,12 @@
 <h4 id="文本长度问题"><a href="#文本长度问题" class="headerlink" title="文本长度问题"></a>文本长度问题</h4><p>既然<strong>图片插入</strong>和<strong>居中</strong>没有问题，那么最后一个问题就是如何保证<strong>尾部标签不被挤出</strong>呢。搜索到<a href="http://blog.csdn.net/sodino/article/details/8778761" target="_blank" rel="noopener">[Android]TextUtils.ellipsize()截取指定长度字符串(附图文混排)</a>，让我注意到<a href="https://developer.android.com/reference/android/text/TextUtils.html#ellipsize" target="_blank" rel="noopener">TextUtils.html.ellipsize(text, p, avail, where)</a>这个方法。其中<code>avail</code>字段代表的是有效长度，<code>text</code> 代码需要截取的字段。这个方法是TextView截取的静态方法。经测试，可用。</p>
 <p><code>avail</code>字段必须是<strong>精确</strong>长度，意思就是说，他会按照你传入的长度对<code>text</code>截取。一开始，我是计算长度是按照：</p>
 <p><code>View的长度 * MaxLines - 图片已占用的长度 - padding(l,t,r,b)</code></p>
-<p><img src="/images/2017/20170607163800.jpg" alt="但是"></p>
+<p><picture><source type="image/webp" srcset="/images/optimized/2017/20170607163800-326.webp?v=01f664dffd30 326w" sizes="(max-width: 650px) min(326px, calc(100vw - 40px)), (max-width: 1000px) min(326px, calc(100vw - 316px)), 326px"><img src="/images/2017/20170607163800.jpg?v=4bdef14c54e5" width="326" height="349" style="aspect-ratio:326/349" alt="但是" loading="lazy" decoding="async" data-original="/images/2017/20170607163800.jpg?v=4bdef14c54e5"></picture></p>
 <p>当把截取后的文本设为<code>TextView</code>时，<code>TextView</code>会根据自身的属性进行布局，当文本文本换行时，如果遇到当前行空出部分字符的情况，就会导致实际的<strong>精确</strong>长度比我计算时的要短，最后的标签图片还是会截。无奈，经调试确认方案是：在计算时，每行减去<code>textsize / 3</code>，即：</p>
 <p><code>View的长度 * maxLines - 图片已占用的长度 - padding(l,t,r,b) - textsize / 3 * (maxLines - 1)</code></p>
 <p>最后计算的代码如下：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 截取传入的字符串</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> old       传入的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> usedWidth 已被占用的宽度</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 截取好的字符串</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">measureText</span><span class="params">(String old, <span class="keyword">int</span> usedWidth)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (TextUtils.isEmpty(old)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> maxLines = TextViewCompat.getMaxLines(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">if</span> (maxLines == Integer.MAX_VALUE) &#123;</span><br><span class="line">        <span class="keyword">return</span> old;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (maxLines &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        maxLines = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//有效文本展示区域</span></span><br><span class="line">    <span class="keyword">int</span> availableWidth = maxLines * (getWidth() -</span><br><span class="line">            getPaddingLeft() - getPaddingRight())</span><br><span class="line">            - usedWidth - (<span class="keyword">int</span>) getTextSize() / <span class="number">3</span> * (maxLines - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> (String) TextUtils.ellipsize(old, getPaint(), availableWidth, TextUtils.TruncateAt.END);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p><img src="/images/2016/20160803143922-3.png" alt="效果图"></p>
+<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p><picture><source type="image/webp" srcset="/images/optimized/2016/20160803143922-3-480.webp?v=50158f72041e 480w, /images/optimized/2016/20160803143922-3-1080.webp?v=fda9acec7617 1080w" sizes="(max-width: 650px) min(1080px, calc(100vw - 40px)), (max-width: 1000px) min(1080px, calc(100vw - 316px)), 760px"><img src="/images/2016/20160803143922-3.png?v=a45b1fd4b47a" width="1080" height="1920" style="aspect-ratio:1080/1920" alt="效果图" loading="lazy" decoding="async" data-original="/images/2016/20160803143922-3.png?v=a45b1fd4b47a"></picture></p>
 <h3 id="方案三"><a href="#方案三" class="headerlink" title="方案三"></a>方案三</h3><p><em>TODO</em></p>
 <h2 id="鸣谢"><a href="#鸣谢" class="headerlink" title="鸣谢"></a>鸣谢</h2><ul>
 <li><a href="http://blog.csdn.net/sodino/article/details/8778761" target="_blank" rel="noopener">TextUtils.ellipsize()截取指定长度字符串(附图文混排)</a></li>

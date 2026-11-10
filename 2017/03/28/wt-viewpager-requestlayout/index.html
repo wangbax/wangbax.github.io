@@ -2,20 +2,64 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#faf7f1"><title>关于ViewPager切换页面时调用requestLayout阻塞问题 | wangbax</title>
-<script src="/js/theme.js?v=a8cae2d640bf"></script>
+<script>// Run before stylesheets so the first paint already uses the chosen appearance.
+(() => {
+  'use strict';
+  const key = 'wangbax.theme';
+  const modes = ['system', 'light', 'dark'];
+  const system = matchMedia('(prefers-color-scheme: dark)');
+  const root = document.documentElement;
+  let mode = 'system';
+  let storage;
+  try {
+    storage = localStorage;
+    const saved = storage.getItem(key);
+    if (modes.includes(saved)) mode = saved;
+  } catch { /* Storage may be disabled; switching still works for this page. */ }
+
+  function apply() {
+    const theme = mode === 'system' ? (system.matches ? 'dark' : 'light') : mode;
+    root.dataset.theme = theme;
+    root.dataset.themeMode = mode;
+    root.style.colorScheme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#25221f' : '#faf7f1');
+    dispatchEvent(new CustomEvent('themechange', { detail: { mode, theme } }));
+  }
+
+  window.siteTheme = {
+    get mode() { return mode; },
+    setMode(value) {
+      if (!modes.includes(value)) return;
+      mode = value;
+      try {
+        if (mode === 'system') storage?.removeItem(key);
+        else storage?.setItem(key, mode);
+      } catch { /* Keep the current page usable without persistent storage. */ }
+      apply();
+    }
+  };
+  system.addEventListener('change', () => { if (mode === 'system') apply(); });
+  addEventListener('storage', event => {
+    if (event.storageArea !== storage || (event.key !== key && event.key !== null)) return;
+    mode = modes.includes(event.newValue) ? event.newValue : 'system';
+    apply();
+  });
+  apply();
+})();
+</script>
 <meta name="description" content="在实际开发过程中，使用到 ViewPager + Fragment 的方式进行显示布局。由于存在需求缓存已加载的 Fragment ，故自定义了 FragmentAdapter ，不 destoryItem ，仅仅注释了 destroyItem 方法里的操作，代码 NoDestr"><meta name="author" content="wangbax">
-<link rel="canonical" href="https://www.wangbaxai.top/2017/03/28/wt-viewpager-requestlayout/"><link rel="icon" type="image/png" href="/images/avatar.png">
+<link rel="canonical" href="https://www.wangbaxai.top/2017/03/28/wt-viewpager-requestlayout/"><link rel="icon" type="image/webp" href="/images/optimized/avatar-64.webp?v=ee6ee8104a73">
 <meta property="og:type" content="article"><meta property="og:site_name" content="wangbax"><meta property="og:title" content="关于ViewPager切换页面时调用requestLayout阻塞问题"><meta property="og:description" content="在实际开发过程中，使用到 ViewPager + Fragment 的方式进行显示布局。由于存在需求缓存已加载的 Fragment ，故自定义了 FragmentAdapter ，不 destoryItem ，仅仅注释了 destroyItem 方法里的操作，代码 NoDestr"><meta property="og:url" content="https://www.wangbaxai.top/2017/03/28/wt-viewpager-requestlayout/"><meta property="og:image" content="https://www.wangbaxai.top/images/avatar.png">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="关于ViewPager切换页面时调用requestLayout阻塞问题"><meta name="twitter:description" content="在实际开发过程中，使用到 ViewPager + Fragment 的方式进行显示布局。由于存在需求缓存已加载的 Fragment ，故自定义了 FragmentAdapter ，不 destoryItem ，仅仅注释了 destroyItem 方法里的操作，代码 NoDestr"><meta property="article:published_time" content="2017-03-28T11:38:59+08:00"><meta property="article:modified_time" content="2017-06-08T11:03:52+08:00">
-<link rel="stylesheet" href="/css/site.css?v=efffebc6faf0"><link rel="stylesheet" href="/css/pages.css?v=a4fce74a365a"><link rel="stylesheet" href="/css/theme.css?v=ba05d23a41b6"><script src="/js/site.js?v=796e7cb78eb4" defer></script>
-</head><body class="reading-page">
+<link rel="stylesheet" href="/css/app.css?v=e68d5460199b"><script src="/js/site.js?v=1059b6693d8c" defer></script><script src="/js/article.js?v=9bbefee4c352" defer></script>
+</head><body class="reading-page" data-search-module="/js/search.js?v=0b2beb899a01" data-search-index="/search.json?v=ece0bfddf346">
 <a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="wrap top">
-  <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="/images/avatar.png" width="29" height="29" alt="">wangbax</a>
+  <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="29px" width="29" height="29" alt="" loading="eager" decoding="async" fetchpriority="high">wangbax</a>
   <nav class="nav" aria-label="主导航"><a href="/#projects">项目</a><a href="/archives/" aria-current="page">文章</a><a href="/about/">关于</a><button class="search-trigger" type="button" data-open-search aria-label="搜索文章"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.5 4.5"/></svg></button><details class="theme-picker" data-theme-picker><summary aria-label="外观模式：跟随系统" title="外观模式：跟随系统"><span data-theme-icon="light"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></span><span data-theme-icon="dark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg></span><span data-theme-icon="system"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></span></summary><div class="theme-options" role="group" aria-label="外观模式"><button type="button" data-theme-option="light" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><span>明亮模式</span><span class="theme-check" aria-hidden="true">✓</span></button><button type="button" data-theme-option="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg><span>夜间模式</span><span class="theme-check" aria-hidden="true">✓</span></button><button type="button" data-theme-option="system" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg><span>跟随系统</span><span class="theme-check" aria-hidden="true">✓</span></button></div></details><a class="github desktop" href="https://github.com/wangbax" target="_blank" rel="noopener">GitHub ↗</a></nav>
 </div></header><div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>
 <main id="main" class="wrap article-main">
-<header class="article-hero"><div class="breadcrumb"><a href="/archives/">← 开发手记</a><span class="breadcrumb-separator" aria-hidden="true">/</span><span>Android</span></div><h1>关于ViewPager切换页面时调用requestLayout阻塞问题</h1><div class="article-meta"><a class="article-author" href="/about/"><img src="/images/avatar.png" width="30" height="30" alt=""><span>wangbax</span></a><time datetime="2017-03-28T11:38:59+08:00">2017-03-28</time><span>约 7 分钟</span><span class="article-updated">更新于 2017-06-08</span></div><svg class="article-sigil" viewBox="0 0 160 160" fill="none" aria-hidden="true"><circle cx="80" cy="80" r="44"/><ellipse cx="80" cy="80" rx="71" ry="22" transform="rotate(-30 80 80)"/><ellipse cx="80" cy="80" rx="63" ry="30" transform="rotate(34 80 80)"/><circle cx="133" cy="50" r="3" fill="currentColor"/></svg></header>
+<header class="article-hero"><div class="breadcrumb"><a href="/archives/">← 开发手记</a><span class="breadcrumb-separator" aria-hidden="true">/</span><span>Android</span></div><h1>关于ViewPager切换页面时调用requestLayout阻塞问题</h1><div class="article-meta"><a class="article-author" href="/about/"><img class="author-avatar" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="30px" width="30" height="30" alt="" loading="eager" decoding="async" fetchpriority="auto"><span>wangbax</span></a><time datetime="2017-03-28T11:38:59+08:00">2017-03-28</time><span>约 7 分钟</span><span class="article-updated">更新于 2017-06-08</span></div><svg class="article-sigil" viewBox="0 0 160 160" fill="none" aria-hidden="true"><circle cx="80" cy="80" r="44"/><ellipse cx="80" cy="80" rx="71" ry="22" transform="rotate(-30 80 80)"/><ellipse cx="80" cy="80" rx="63" ry="30" transform="rotate(34 80 80)"/><circle cx="133" cy="50" r="3" fill="currentColor"/></svg></header>
 <div class="reading-layout"><article class="article-column" aria-label="关于ViewPager切换页面时调用requestLayout阻塞问题"><details class="mobile-toc"><summary>本文目录 <span aria-hidden="true">＋</span></summary><nav aria-label="手机文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-0"><a href="#BUG">BUG</a></li><li class="toc-level-1"><a href="#%E6%8F%8F%E8%BF%B0">描述</a></li><li class="toc-level-1"><a href="#%E8%A7%A3%E5%86%B3">解决</a></li><li class="toc-level-1"><a href="#%E5%88%86%E6%9E%90">分析</a></li><li class="toc-level-1"><a href="#%E6%80%BB%E7%BB%93">总结</a></li><li class="toc-level-0"><a href="#%E4%BB%A3%E7%A0%81%E5%8C%BA">代码区</a></li><li class="toc-level-2"><a href="#NoDestroyItemFragmentAdapter">NoDestroyItemFragmentAdapter</a></li></ol></nav></details><div class="article-body" id="article-body"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>在实际开发过程中，使用到<code>ViewPager</code>+<code>Fragment</code>的方式进行显示布局。由于存在需求缓存已加载的<code>Fragment</code>，故自定义了<code>FragmentAdapter</code>，不<code>destoryItem</code>，仅仅注释了<code>destroyItem</code>方法里的操作，代码<a href="#wt-name-adapter">NoDestroyItemFragmentAdapter</a>。</p>
 <p>至于为什么不设置<a href="https://developer.android.com/reference/android/support/v4/view/ViewPager.html#setOffscreenPageLimit(int" target="_blank" rel="noopener">ViewPager.setOffscreenPageLimit(int limit)</a>)方法，是由于如果设置了此方法，会导致所有的页面同时加载，增加了缓存布局数量。</p>
 <a id="more"></a>

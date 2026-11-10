@@ -2,6 +2,7 @@
 """Render the personal website from article fragments and site content."""
 
 import argparse
+from functools import lru_cache
 import hashlib
 from html import escape
 from html.parser import HTMLParser
@@ -9,13 +10,13 @@ import json
 from pathlib import Path
 import re
 from urllib.parse import quote
-import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
 SITE = json.loads((CONTENT / "site.json").read_text())
 POSTS = json.loads((CONTENT / "posts.json").read_text())
+IMAGES = json.loads((CONTENT / "images.json").read_text())
 PAGES = [
     "index.html", "about/index.html", "project/index.html",
     "archives/index.html", "search/index.html", "404.html",
@@ -44,9 +45,41 @@ def e(value):
     return escape(str(value), quote=True)
 
 
+def styles():
+    return "\n".join((ROOT / "css" / name).read_text() for name in ["site.css", "pages.css", "theme.css"])
+
+
+@lru_cache(maxsize=None)
 def asset(path):
-    digest = hashlib.sha256((ROOT / path.lstrip("/")).read_bytes()).hexdigest()[:12]
+    content = styles().encode() if path == "/css/app.css" else render_search().encode() if path == "/search.json" else (ROOT / path.lstrip("/")).read_bytes()
+    digest = hashlib.sha256(content).hexdigest()[:12]
     return path + "?v=" + digest
+
+
+def avatar(class_name, width, alt="", priority="auto"):
+    variants = IMAGES[SITE["avatar"]]["variants"]
+    srcset = ", ".join(f'{asset(item["path"])} {item["width"]}w' for item in variants)
+    source = next(item for item in variants if item["width"] >= width)
+    return f'<img class="{e(class_name)}" src="{e(asset(source["path"]))}" srcset="{e(srcset)}" sizes="{width}px" width="{width}" height="{width}" alt="{e(alt)}" loading="eager" decoding="async" fetchpriority="{priority}">'
+
+
+class ImageAttributes(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        self.attributes = dict(attrs)
+
+
+def article_images(body):
+    def replace(match):
+        parser = ImageAttributes()
+        parser.feed(match.group())
+        attrs = parser.attributes
+        source = attrs["src"]
+        image = IMAGES[source]
+        srcset = ", ".join(f'{asset(item["path"])} {item["width"]}w' for item in image["variants"])
+        sizes = f'(max-width: 650px) min({image["width"]}px, calc(100vw - 40px)), (max-width: 1000px) min({image["width"]}px, calc(100vw - 316px)), {min(image["width"], 760)}px'
+        fallback = f'<img src="{e(asset(source))}" width="{image["width"]}" height="{image["height"]}" style="aspect-ratio:{image["width"]}/{image["height"]}" alt="{e(attrs.get("alt", ""))}" loading="lazy" decoding="async" data-original="{e(asset(source))}">'
+        return f'<picture><source type="image/webp" srcset="{e(srcset)}" sizes="{e(sizes)}">{fallback}</picture>'
+    return re.sub(r"<img\b[^>]*>", replace, body)
 
 
 class ArticleInfo(HTMLParser):
@@ -58,6 +91,8 @@ class ArticleInfo(HTMLParser):
         self.feed(body)
 
     def handle_starttag(self, tag, attrs):
+        if tag in {"p", "br", "div", "h1", "h2", "h3", "h4", "li", "tr", "pre", "blockquote"}:
+            self.text.append(" ")
         attrs = dict(attrs)
         if tag in {"h2", "h3", "h4"} and attrs.get("id"):
             self.current = {"id": attrs["id"], "level": int(tag[1]), "parts": []}
@@ -68,6 +103,8 @@ class ArticleInfo(HTMLParser):
             self.current["parts"].append(data)
 
     def handle_endtag(self, tag):
+        if tag in {"p", "div", "h1", "h2", "h3", "h4", "li", "tr", "pre", "blockquote"}:
+            self.text.append(" ")
         if self.current is not None and tag == "h" + str(self.current["level"]):
             self.current["name"] = "".join(self.current.pop("parts")).strip()
             self.headings.append(self.current)
@@ -82,7 +119,7 @@ def header(active=""):
     )
     return f'''<a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="wrap top">
-  <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="{e(SITE['avatar'])}" width="29" height="29" alt="">wangbax</a>
+  <a class="brand" href="/" aria-label="wangbax 首页">{avatar('mark profile-image', 29, priority='high')}wangbax</a>
   <nav class="nav" aria-label="主导航">{nav}<button class="search-trigger" type="button" data-open-search aria-label="搜索文章">{SEARCH_ICON}</button>{theme_picker()}<a class="github desktop" href="{e(SITE['github'])}" target="_blank" rel="noopener">GitHub ↗</a></nav>
 </div></header>'''
 
@@ -115,19 +152,19 @@ def document(title, url, body, active="", description=None, post=None, home=Fals
     if post:
         article_meta = f'<meta property="article:published_time" content="{e(post["published"])}"><meta property="article:modified_time" content="{e(post["updated"])}">'
     scripts = f'<script src="{asset("/js/site.js")}" defer></script>'
-    if home:
-        scripts += f'<script src="{asset("/js/planet.js")}" defer></script>'
+    if post:
+        scripts += f'<script src="{asset("/js/article.js")}" defer></script>'
     return f'''<!doctype html>
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#faf7f1"><title>{e(page_title)}</title>
-<script src="{asset('/js/theme.js')}"></script>
+<script>{(ROOT / 'js/theme.js').read_text()}</script>
 <meta name="description" content="{e(description)}"><meta name="author" content="wangbax">
-<link rel="canonical" href="{e(canonical)}"><link rel="icon" type="image/png" href="{e(SITE['avatar'])}">
+<link rel="canonical" href="{e(canonical)}"><link rel="icon" type="image/webp" href="{e(asset(IMAGES[SITE['avatar']]['variants'][0]['path']))}">
 <meta property="og:type" content="{'article' if post else 'website'}"><meta property="og:site_name" content="wangbax"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{e(canonical)}"><meta property="og:image" content="{e(SITE['origin'] + SITE['avatar'])}">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="{e(title)}"><meta name="twitter:description" content="{e(description)}">{article_meta}
-<link rel="stylesheet" href="{asset('/css/site.css')}"><link rel="stylesheet" href="{asset('/css/pages.css')}"><link rel="stylesheet" href="{asset('/css/theme.css')}">{scripts}
-</head><body class="{'home-page' if home else 'reading-page' if post else 'collection-page'}">
+<link rel="stylesheet" href="{asset('/css/app.css')}">{scripts}
+</head><body class="{'home-page' if home else 'reading-page' if post else 'collection-page'}" data-search-module="{asset('/js/search.js')}" data-search-index="{asset('/search.json')}">
 {header(active)}{body}{footer()}{search_dialog()}
 </body></html>
 '''
@@ -152,7 +189,7 @@ def note(post, title=None):
 def home_page():
     notes = "".join(note(POST_BY_URL[item["url"]], item["title"]) for item in SITE["notes"])
     body = f'''<main id="main" class="wrap">
-<section class="hero" aria-labelledby="home-name"><div class="space" aria-hidden="true"><canvas id="universe"></canvas></div><div class="hero-content"><div class="eyebrow reveal">A SPACE FOR CURIOSITY</div><h1 class="reveal" id="home-name">wangbax<span>.</span></h1><h2 class="reveal">在代码与灵感之间。</h2><p class="reveal">你好，欢迎来到我的一小片宇宙。<br>这里有做过的小项目，也有开发路上的问题与发现。</p><div class="hero-actions reveal"><a class="primary" href="#projects">探索项目 {ARROW}</a><a class="secondary" href="#notes">读一篇手记 ↓</a></div></div><div class="orbit-label" aria-hidden="true">IDEAS IN ORBIT</div><div class="hero-foot">保持耐心，持续探索。 &nbsp; / &nbsp; BE PATIENT, BE LEARNING.</div></section>
+<section class="hero" aria-labelledby="home-name"><div class="space" aria-hidden="true"><canvas id="universe" data-planet-module="{asset('/js/planet.js')}"></canvas></div><div class="hero-content"><div class="eyebrow reveal">A SPACE FOR CURIOSITY</div><h1 class="reveal" id="home-name">wangbax<span>.</span></h1><h2 class="reveal">在代码与灵感之间。</h2><p class="reveal">你好，欢迎来到我的一小片宇宙。<br>这里有做过的小项目，也有开发路上的问题与发现。</p><div class="hero-actions reveal"><a class="primary" href="#projects">探索项目 {ARROW}</a><a class="secondary" href="#notes">读一篇手记 ↓</a></div></div><div class="orbit-label" aria-hidden="true">IDEAS IN ORBIT</div><div class="hero-foot">保持耐心，持续探索。 &nbsp; / &nbsp; BE PATIENT, BE LEARNING.</div></section>
 <section class="work" id="projects"><div class="section-head"><h2>探索与作品 <small>PROJECTS</small></h2><a href="/project/">全部项目 →</a></div>{projects()}</section>
 <section class="notes" id="notes"><div class="section-head"><h2>沿途的手记 <small>NOTES</small></h2><a href="/archives/">文章归档 ↗</a></div>{notes}</section>
 </main>'''
@@ -170,7 +207,7 @@ def toc_links(headings):
 
 
 def article_page(post):
-    body = (CONTENT / post["body"]).read_text()
+    body = article_images((CONTENT / post["body"]).read_text())
     info = ArticleInfo(body)
     text = " ".join(info.text)
     minutes = max(1, round(len(re.findall(r"[\u4e00-\u9fff]", text)) / 380 + len(re.findall(r"[a-zA-Z]+", text)) / 200))
@@ -187,7 +224,7 @@ def article_page(post):
     sigil = '<svg class="article-sigil" viewBox="0 0 160 160" fill="none" aria-hidden="true"><circle cx="80" cy="80" r="44"/><ellipse cx="80" cy="80" rx="71" ry="22" transform="rotate(-30 80 80)"/><ellipse cx="80" cy="80" rx="63" ry="30" transform="rotate(34 80 80)"/><circle cx="133" cy="50" r="3" fill="currentColor"/></svg>'
     page = f'''<div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>
 <main id="main" class="wrap article-main">
-<header class="article-hero"><div class="breadcrumb"><a href="/archives/">← 开发手记</a><span class="breadcrumb-separator" aria-hidden="true">/</span><span>{e(post['category'])}</span></div><h1>{e(post['title'])}</h1><div class="article-meta"><a class="article-author" href="/about/"><img src="{e(SITE['avatar'])}" width="30" height="30" alt=""><span>wangbax</span></a><time datetime="{e(post['published'])}">{post['published'][:10]}</time><span>约 {minutes} 分钟</span>{updated}</div>{sigil}</header>
+<header class="article-hero"><div class="breadcrumb"><a href="/archives/">← 开发手记</a><span class="breadcrumb-separator" aria-hidden="true">/</span><span>{e(post['category'])}</span></div><h1>{e(post['title'])}</h1><div class="article-meta"><a class="article-author" href="/about/">{avatar('author-avatar', 30)}<span>wangbax</span></a><time datetime="{e(post['published'])}">{post['published'][:10]}</time><span>约 {minutes} 分钟</span>{updated}</div>{sigil}</header>
 <div class="reading-layout"><article class="article-column" aria-label="{e(post['title'])}">{mobile_toc}<div class="article-body" id="article-body">{body}</div><footer class="article-footer"><a class="back-to-notes" href="/archives/">← 返回全部文章</a></footer><nav class="neighbor-notes" aria-label="相邻文章">{''.join(neighbors)}</nav></article>{aside}</div>
 </main>'''
     return document(post["title"], post["url"], page, active="notes", description=post["summary"], post=post)
@@ -208,7 +245,7 @@ def article_list():
 
 
 def about_page():
-    body = f'''<main id="main" class="wrap about-main"><div class="about-intro"><img class="about-avatar" src="{e(SITE['avatar'])}" width="80" height="80" alt="wangbax 的头像"><p class="eyebrow">A LITTLE ABOUT ME</p><h1>你好，我是 wangbax。</h1><p>这里记录开发中遇到的问题、解决过程和学习笔记，<br class="desktop">主要围绕 Android、PHP 和开发工具。</p><p>写博客是为了给自己留个备忘。如果你也遇到了类似的问题，<br class="desktop">希望这些记录能帮上忙。</p><a class="about-github" href="{e(SITE['github'])}" target="_blank" rel="noopener">在 GitHub 找到我 {ARROW}</a><blockquote>Be Patient, Be Learning.</blockquote></div><div class="about-links"><a href="/#projects">看看我的项目 {ARROW}</a><a href="/archives/">读一篇开发手记 {ARROW}</a></div></main>'''
+    body = f'''<main id="main" class="wrap about-main"><div class="about-intro">{avatar('about-avatar', 80, 'wangbax 的头像')}<p class="eyebrow">A LITTLE ABOUT ME</p><h1>你好，我是 wangbax。</h1><p>这里记录开发中遇到的问题、解决过程和学习笔记，<br class="desktop">主要围绕 Android、PHP 和开发工具。</p><p>写博客是为了给自己留个备忘。如果你也遇到了类似的问题，<br class="desktop">希望这些记录能帮上忙。</p><a class="about-github" href="{e(SITE['github'])}" target="_blank" rel="noopener">在 GitHub 找到我 {ARROW}</a><blockquote>Be Patient, Be Learning.</blockquote></div><div class="about-links"><a href="/#projects">看看我的项目 {ARROW}</a><a href="/archives/">读一篇开发手记 {ARROW}</a></div></main>'''
     return document("关于我", "/about/", body, active="about", description="我是 wangbax。这里记录 Android、PHP 和开发工具相关的实践与学习笔记。")
 
 
@@ -233,22 +270,23 @@ def render_page(name):
 
 
 def render_search():
-    root = ET.Element("search")
-    for post in POSTS:
-        entry = ET.SubElement(root, "entry")
-        ET.SubElement(entry, "title").text = post["title"]
-        ET.SubElement(entry, "url").text = post["url"]
-        ET.SubElement(entry, "content", {"type": "html"}).text = (CONTENT / post["body"]).read_text()
-    return '<?xml version="1.0" encoding="UTF-8"?>' + chr(10) + ET.tostring(root, encoding="unicode") + chr(10)
+    entries = [{"title": post["title"], "url": post["url"], "date": post["published"][:10],
+                "content": re.sub(r"\s+", " ", "".join(ArticleInfo((CONTENT / post["body"]).read_text()).text)).strip()}
+               for post in POSTS]
+    return json.dumps(entries, ensure_ascii=False, separators=(",", ":")) + "\n"
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="Fail when generated pages differ from their source")
     args = parser.parse_args()
+    for name, image in IMAGES.items():
+        if hashlib.sha256((ROOT / name.lstrip("/")).read_bytes()).hexdigest() != image["source_sha256"]:
+            raise SystemExit("Regenerate responsive images with scripts/optimize_images.py: " + name)
     changed = []
     outputs = {name: render_page(name) for name in PAGES}
-    outputs["search.xml"] = render_search()
+    outputs["search.json"] = render_search()
+    outputs["css/app.css"] = styles()
     for path, rendered in outputs.items():
         target = ROOT / path
         if not target.is_file() or target.read_text() != rendered:

@@ -2,16 +2,60 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#faf7f1"><title>找一篇手记 | wangbax</title>
-<script src="/js/theme.js?v=a8cae2d640bf"></script>
+<script>// Run before stylesheets so the first paint already uses the chosen appearance.
+(() => {
+  'use strict';
+  const key = 'wangbax.theme';
+  const modes = ['system', 'light', 'dark'];
+  const system = matchMedia('(prefers-color-scheme: dark)');
+  const root = document.documentElement;
+  let mode = 'system';
+  let storage;
+  try {
+    storage = localStorage;
+    const saved = storage.getItem(key);
+    if (modes.includes(saved)) mode = saved;
+  } catch { /* Storage may be disabled; switching still works for this page. */ }
+
+  function apply() {
+    const theme = mode === 'system' ? (system.matches ? 'dark' : 'light') : mode;
+    root.dataset.theme = theme;
+    root.dataset.themeMode = mode;
+    root.style.colorScheme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#25221f' : '#faf7f1');
+    dispatchEvent(new CustomEvent('themechange', { detail: { mode, theme } }));
+  }
+
+  window.siteTheme = {
+    get mode() { return mode; },
+    setMode(value) {
+      if (!modes.includes(value)) return;
+      mode = value;
+      try {
+        if (mode === 'system') storage?.removeItem(key);
+        else storage?.setItem(key, mode);
+      } catch { /* Keep the current page usable without persistent storage. */ }
+      apply();
+    }
+  };
+  system.addEventListener('change', () => { if (mode === 'system') apply(); });
+  addEventListener('storage', event => {
+    if (event.storageArea !== storage || (event.key !== key && event.key !== null)) return;
+    mode = modes.includes(event.newValue) ? event.newValue : 'system';
+    apply();
+  });
+  apply();
+})();
+</script>
 <meta name="description" content="wangbax 的个人空间，收录小项目、开发手记和学习记录。"><meta name="author" content="wangbax">
-<link rel="canonical" href="https://www.wangbaxai.top/search/"><link rel="icon" type="image/png" href="/images/avatar.png">
+<link rel="canonical" href="https://www.wangbaxai.top/search/"><link rel="icon" type="image/webp" href="/images/optimized/avatar-64.webp?v=ee6ee8104a73">
 <meta property="og:type" content="website"><meta property="og:site_name" content="wangbax"><meta property="og:title" content="找一篇手记"><meta property="og:description" content="wangbax 的个人空间，收录小项目、开发手记和学习记录。"><meta property="og:url" content="https://www.wangbaxai.top/search/"><meta property="og:image" content="https://www.wangbaxai.top/images/avatar.png">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="找一篇手记"><meta name="twitter:description" content="wangbax 的个人空间，收录小项目、开发手记和学习记录。">
-<link rel="stylesheet" href="/css/site.css?v=efffebc6faf0"><link rel="stylesheet" href="/css/pages.css?v=a4fce74a365a"><link rel="stylesheet" href="/css/theme.css?v=ba05d23a41b6"><script src="/js/site.js?v=796e7cb78eb4" defer></script>
-</head><body class="collection-page">
+<link rel="stylesheet" href="/css/app.css?v=e68d5460199b"><script src="/js/site.js?v=1059b6693d8c" defer></script>
+</head><body class="collection-page" data-search-module="/js/search.js?v=0b2beb899a01" data-search-index="/search.json?v=ece0bfddf346">
 <a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="wrap top">
-  <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="/images/avatar.png" width="29" height="29" alt="">wangbax</a>
+  <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="29px" width="29" height="29" alt="" loading="eager" decoding="async" fetchpriority="high">wangbax</a>
   <nav class="nav" aria-label="主导航"><a href="/#projects">项目</a><a href="/archives/" aria-current="page">文章</a><a href="/about/">关于</a><button class="search-trigger" type="button" data-open-search aria-label="搜索文章"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.5 4.5"/></svg></button><details class="theme-picker" data-theme-picker><summary aria-label="外观模式：跟随系统" title="外观模式：跟随系统"><span data-theme-icon="light"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></span><span data-theme-icon="dark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg></span><span data-theme-icon="system"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></span></summary><div class="theme-options" role="group" aria-label="外观模式"><button type="button" data-theme-option="light" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><span>明亮模式</span><span class="theme-check" aria-hidden="true">✓</span></button><button type="button" data-theme-option="dark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg><span>夜间模式</span><span class="theme-check" aria-hidden="true">✓</span></button><button type="button" data-theme-option="system" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg><span>跟随系统</span><span class="theme-check" aria-hidden="true">✓</span></button></div></details><a class="github desktop" href="https://github.com/wangbax" target="_blank" rel="noopener">GitHub ↗</a></nav>
 </div></header><main id="main" class="wrap collection-main"><header class="collection-hero"><p class="eyebrow">SEARCH</p><h1>找一篇手记</h1><p>按标题、正文或关键词搜索。</p></header><div class="search-widget" data-search-widget>
   <label class="sr-only" for="page-search">搜索文章</label>
