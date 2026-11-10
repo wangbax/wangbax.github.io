@@ -52,7 +52,7 @@
 <meta property="og:type" content="article"><meta property="og:site_name" content="wangbax"><meta property="og:title" content="关于ViewPager切换页面时调用requestLayout阻塞问题"><meta property="og:description" content="在实际开发过程中，使用到 ViewPager + Fragment 的方式进行显示布局。由于存在需求缓存已加载的 Fragment ，故自定义了 FragmentAdapter ，不 destoryItem ，仅仅注释了 destroyItem 方法里的操作，代码 NoDestr"><meta property="og:url" content="https://www.wangbaxai.top/2017/03/28/wt-viewpager-requestlayout/"><meta property="og:image" content="https://www.wangbaxai.top/images/avatar.png">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="关于ViewPager切换页面时调用requestLayout阻塞问题"><meta name="twitter:description" content="在实际开发过程中，使用到 ViewPager + Fragment 的方式进行显示布局。由于存在需求缓存已加载的 Fragment ，故自定义了 FragmentAdapter ，不 destoryItem ，仅仅注释了 destroyItem 方法里的操作，代码 NoDestr"><meta property="article:published_time" content="2017-03-28T11:38:59+08:00"><meta property="article:modified_time" content="2017-06-08T11:03:52+08:00">
 <link rel="stylesheet" href="/css/app.css?v=61b908872ac5"><script src="/js/site.js?v=1059b6693d8c" defer></script><script src="/js/article.js?v=9bbefee4c352" defer></script>
-</head><body class="reading-page" data-search-module="/js/search.js?v=0b2beb899a01" data-search-index="/search.json?v=ece0bfddf346">
+</head><body class="reading-page" data-search-module="/js/search.js?v=35667f834fd9" data-search-index="/search.json?v=76f0873e267a">
 <a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="wrap top">
   <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="29px" width="29" height="29" alt="" loading="eager" decoding="async" fetchpriority="high">wangbax</a>
@@ -60,32 +60,387 @@
 </div></header><div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>
 <main id="main" class="wrap article-main">
 <header class="article-hero"><div class="breadcrumb"><a href="/archives/">← 开发手记</a><span class="breadcrumb-separator" aria-hidden="true">/</span><span>Android</span></div><h1>关于ViewPager切换页面时调用requestLayout阻塞问题</h1><div class="article-meta"><a class="article-author" href="/about/"><img class="author-avatar" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="30px" width="30" height="30" alt="" loading="eager" decoding="async" fetchpriority="auto"><span>wangbax</span></a><time datetime="2017-03-28T11:38:59+08:00">2017-03-28</time><span>约 7 分钟</span><span class="article-updated">更新于 2017-06-08</span></div><svg class="article-sigil" viewBox="0 0 160 160" fill="none" aria-hidden="true"><circle cx="80" cy="80" r="44"/><ellipse cx="80" cy="80" rx="71" ry="22" transform="rotate(-30 80 80)"/><ellipse cx="80" cy="80" rx="63" ry="30" transform="rotate(34 80 80)"/><circle cx="133" cy="50" r="3" fill="currentColor"/></svg></header>
-<div class="reading-layout"><article class="article-column" aria-label="关于ViewPager切换页面时调用requestLayout阻塞问题"><details class="mobile-toc"><summary>本文目录 <span aria-hidden="true">＋</span></summary><nav aria-label="手机文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-0"><a href="#BUG">BUG</a></li><li class="toc-level-1"><a href="#%E6%8F%8F%E8%BF%B0">描述</a></li><li class="toc-level-1"><a href="#%E8%A7%A3%E5%86%B3">解决</a></li><li class="toc-level-1"><a href="#%E5%88%86%E6%9E%90">分析</a></li><li class="toc-level-1"><a href="#%E6%80%BB%E7%BB%93">总结</a></li><li class="toc-level-0"><a href="#%E4%BB%A3%E7%A0%81%E5%8C%BA">代码区</a></li><li class="toc-level-2"><a href="#NoDestroyItemFragmentAdapter">NoDestroyItemFragmentAdapter</a></li></ol></nav></details><div class="article-body" id="article-body"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>在实际开发过程中，使用到<code>ViewPager</code>+<code>Fragment</code>的方式进行显示布局。由于存在需求缓存已加载的<code>Fragment</code>，故自定义了<code>FragmentAdapter</code>，不<code>destoryItem</code>，仅仅注释了<code>destroyItem</code>方法里的操作，代码<a href="#wt-name-adapter">NoDestroyItemFragmentAdapter</a>。</p>
-<p>至于为什么不设置<a href="https://developer.android.com/reference/android/support/v4/view/ViewPager.html#setOffscreenPageLimit(int" target="_blank" rel="noopener">ViewPager.setOffscreenPageLimit(int limit)</a>)方法，是由于如果设置了此方法，会导致所有的页面同时加载，增加了缓存布局数量。</p>
-<a id="more"></a>
-<h2 id="BUG"><a href="#BUG" class="headerlink" title="BUG"></a>BUG</h2><h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>此时，导致了一个问题：当有非当前展示的页面需要刷新时，调用的<code>requestLayout()</code>无法执行到<code>onLayout()</code>方法。对应项目中的现象就是：调用<code>notifyDataChanged()</code>无法刷新列表。</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>在<code>Fragment</code>的<code>setMenuVisibility</code>中调用一次<code>requestLayout()</code>。保证当前View的<code>PFLAG_FORCE_LAYOUT</code>被消费掉。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMenuVisibility</span><span class="params">(<span class="keyword">boolean</span> menuVisible)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.setMenuVisibility(menuVisible);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//解决当非当前页面刷新了此页面时,requestLayout无限阻塞问题</span></span><br><span class="line">    <span class="keyword">if</span> (menuVisible &amp;&amp; <span class="keyword">null</span> != getView())&#123;</span><br><span class="line">        getView().postDelayed(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">null</span> == getView()) &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                getView().requestLayout();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, <span class="number">200</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>查看<a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html" target="_blank" rel="noopener">RecyclerView</a>源码，查看<code>RecyclerViewDataObserver</code>的<code>onChanged</code>方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChanged</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	assertNotInLayoutOrScroll(<span class="keyword">null</span>);</span><br><span class="line">	<span class="keyword">if</span> (mAdapter.hasStableIds()) &#123;</span><br><span class="line">	<span class="comment">// TODO Determine what actually changed.</span></span><br><span class="line">	<span class="comment">// This is more important to implement now since this callback will disable all</span></span><br><span class="line">	<span class="comment">// animations because we cannot rely on positions.</span></span><br><span class="line">		mState.mStructureChanged = <span class="keyword">true</span>;</span><br><span class="line">		setDataSetChangedAfterLayout();</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		mState.mStructureChanged = <span class="keyword">true</span>;</span><br><span class="line">		setDataSetChangedAfterLayout();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (!mAdapterHelper.hasPendingUpdates()) &#123;</span><br><span class="line">		requestLayout();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>继续查看<code>requestLayout()</code>和<code>onLayout()</code>方法;</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onLayout</span><span class="params">(<span class="keyword">boolean</span> changed, <span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    TraceCompat.beginSection(TRACE_ON_LAYOUT_TAG);</span><br><span class="line">    dispatchLayout();</span><br><span class="line">    TraceCompat.endSection();</span><br><span class="line">    mFirstLayoutComplete = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mEatRequestLayout == <span class="number">0</span> &amp;&amp; !mLayoutFrozen) &#123;</span><br><span class="line">        <span class="keyword">super</span>.requestLayout();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mLayoutRequestEaten = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其中<code>dispatchLayout()</code>即为<code>RecyclerView</code>页面布局。</p>
+<div class="reading-layout"><article class="article-column" aria-label="关于ViewPager切换页面时调用requestLayout阻塞问题"><details class="mobile-toc"><summary>本文目录 <span aria-hidden="true">＋</span></summary><nav aria-label="手机文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-0"><a href="#BUG">BUG</a></li><li class="toc-level-1"><a href="#%E6%8F%8F%E8%BF%B0">描述</a></li><li class="toc-level-1"><a href="#%E8%A7%A3%E5%86%B3">解决</a></li><li class="toc-level-1"><a href="#%E5%88%86%E6%9E%90">分析</a></li><li class="toc-level-1"><a href="#%E6%80%BB%E7%BB%93">总结</a></li><li class="toc-level-0"><a href="#%E4%BB%A3%E7%A0%81%E5%8C%BA">代码区</a></li><li class="toc-level-2"><a href="#NoDestroyItemFragmentAdapter">NoDestroyItemFragmentAdapter</a></li></ol></nav></details><div class="article-body" id="article-body"><h2 id="简介"><a class="headerlink" href="#简介" title="链接到此段落"></a>简介</h2>
+<p>在实际开发过程中，使用到<code>ViewPager</code>+<code>Fragment</code>的方式进行显示布局。由于存在需求缓存已加载的<code>Fragment</code>，故自定义了<code>FragmentAdapter</code>，不<code>destoryItem</code>，仅仅注释了<code>destroyItem</code>方法里的操作，代码<a href="#wt-name-adapter">NoDestroyItemFragmentAdapter</a>。</p>
+<p>至于为什么不设置<a href="https://developer.android.com/reference/android/support/v4/view/ViewPager.html#setOffscreenPageLimit(int)">ViewPager.setOffscreenPageLimit(int limit)</a>方法，是由于如果设置了此方法，会导致所有的页面同时加载，增加了缓存布局数量。</p>
+<p><a id="more"></a></p>
+<h2 id="BUG"><a class="headerlink" href="#BUG" title="链接到此段落"></a>BUG</h2>
+<h3 id="描述"><a class="headerlink" href="#描述" title="链接到此段落"></a>描述</h3>
+<p>此时，导致了一个问题：当有非当前展示的页面需要刷新时，调用的<code>requestLayout()</code>无法执行到<code>onLayout()</code>方法。对应项目中的现象就是：调用<code>notifyDataChanged()</code>无法刷新列表。</p>
+<h3 id="解决"><a class="headerlink" href="#解决" title="链接到此段落"></a>解决</h3>
+<p>在<code>Fragment</code>的<code>setMenuVisibility</code>中调用一次<code>requestLayout()</code>。保证当前View的<code>PFLAG_FORCE_LAYOUT</code>被消费掉。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre>@Override
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="function">setMenuVisibility</span>(<span class="keyword">boolean</span> menuVisible) {
+    <span class="keyword">super</span>.<span class="attr">setMenuVisibility</span>(menuVisible);
+
+    <span class="comment">//解决当非当前页面刷新了此页面时,requestLayout无限阻塞问题</span>
+    <span class="keyword">if</span> (menuVisible &amp;&amp; <span class="keyword">null</span> != getView()){
+        getView().<span class="attr">postDelayed</span>(<span class="keyword">new</span> Runnable() {
+            @Override
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">run</span>() {
+                <span class="keyword">if</span> (<span class="keyword">null</span> == getView()) {
+                    <span class="keyword">return</span>;
+                }
+                getView().<span class="attr">requestLayout</span>();
+            }
+        }, <span class="number">200</span>);
+    }
+}</pre></td></tr></table></figure>
+<h3 id="分析"><a class="headerlink" href="#分析" title="链接到此段落"></a>分析</h3>
+<p>查看<a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html">RecyclerView</a>源码，查看<code>RecyclerViewDataObserver</code>的<code>onChanged</code>方法</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre>
+@Override
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="function">onChanged</span>() {
+    assertNotInLayoutOrScroll(<span class="keyword">null</span>);
+    <span class="keyword">if</span> (mAdapter.<span class="attr">hasStableIds</span>()) {
+    <span class="comment">// TODO Determine what actually changed.</span>
+    <span class="comment">// This is more important to implement now since this callback will disable all</span>
+    <span class="comment">// animations because we cannot rely on positions.</span>
+        mState.<span class="attr">mStructureChanged</span> = <span class="keyword">true</span>;
+        setDataSetChangedAfterLayout();
+    } <span class="keyword">else</span> {
+        mState.<span class="attr">mStructureChanged</span> = <span class="keyword">true</span>;
+        setDataSetChangedAfterLayout();
+    }
+    <span class="keyword">if</span> (!mAdapterHelper.<span class="attr">hasPendingUpdates</span>()) {
+        requestLayout();
+    }
+}</pre></td></tr></table></figure>
+继续查看<code>requestLayout()</code>和<code>onLayout()</code>方法;</p>
+<p><figure class="highlight java"><table><tr><td class="code"><pre>
+@Override
+<span class="keyword">protected</span> <span class="keyword">void</span> <span class="function">onLayout</span>(<span class="keyword">boolean</span> changed, <span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b) {
+    TraceCompat.<span class="attr">beginSection</span>(TRACE_ON_LAYOUT_TAG);
+    dispatchLayout();
+    TraceCompat.<span class="attr">endSection</span>();
+    mFirstLayoutComplete = <span class="keyword">true</span>;
+}
+
+@Override
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="function">requestLayout</span>() {
+    <span class="keyword">if</span> (mEatRequestLayout == <span class="number">0</span> &amp;&amp; !mLayoutFrozen) {
+        <span class="keyword">super</span>.<span class="attr">requestLayout</span>();
+    } <span class="keyword">else</span> {
+        mLayoutRequestEaten = <span class="keyword">true</span>;
+    }
+}</pre></td></tr></table></figure>
+其中<code>dispatchLayout()</code>即为<code>RecyclerView</code>页面布局。</p>
 <p>查看<code>View.requestLayout()</code>方法</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@CallSuper</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mMeasureCache != <span class="keyword">null</span>) mMeasureCache.clear();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mAttachInfo != <span class="keyword">null</span> &amp;&amp; mAttachInfo.mViewRequestingLayout == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// Only trigger request-during-layout logic if this is the view requesting it,</span></span><br><span class="line">        <span class="comment">// not the views in its parent hierarchy</span></span><br><span class="line">        ViewRootImpl viewRoot = getViewRootImpl();</span><br><span class="line">        <span class="keyword">if</span> (viewRoot != <span class="keyword">null</span> &amp;&amp; viewRoot.isInLayout()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!viewRoot.requestLayoutDuringLayout(<span class="keyword">this</span>)) &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        mAttachInfo.mViewRequestingLayout = <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mPrivateFlags |= PFLAG_FORCE_LAYOUT;</span><br><span class="line">    mPrivateFlags |= PFLAG_INVALIDATED;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mParent != <span class="keyword">null</span> &amp;&amp; !mParent.isLayoutRequested()) &#123;</span><br><span class="line">        mParent.requestLayout();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mAttachInfo != <span class="keyword">null</span> &amp;&amp; mAttachInfo.mViewRequestingLayout == <span class="keyword">this</span>) &#123;</span><br><span class="line">        mAttachInfo.mViewRequestingLayout = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre>@CallSuper
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="function">requestLayout</span>() {
+    <span class="keyword">if</span> (mMeasureCache != <span class="keyword">null</span>) mMeasureCache.<span class="attr">clear</span>();
+
+    <span class="keyword">if</span> (mAttachInfo != <span class="keyword">null</span> &amp;&amp; mAttachInfo.<span class="attr">mViewRequestingLayout</span> == <span class="keyword">null</span>) {
+        <span class="comment">// Only trigger request-during-layout logic if this is the view requesting it,</span>
+        <span class="comment">// not the views in its parent hierarchy</span>
+        ViewRootImpl viewRoot = getViewRootImpl();
+        <span class="keyword">if</span> (viewRoot != <span class="keyword">null</span> &amp;&amp; viewRoot.<span class="attr">isInLayout</span>()) {
+            <span class="keyword">if</span> (!viewRoot.<span class="attr">requestLayoutDuringLayout</span>(<span class="keyword">this</span>)) {
+                <span class="keyword">return</span>;
+            }
+        }
+        mAttachInfo.<span class="attr">mViewRequestingLayout</span> = <span class="keyword">this</span>;
+    }
+
+    mPrivateFlags |= PFLAG_FORCE_LAYOUT;
+    mPrivateFlags |= PFLAG_INVALIDATED;
+
+    <span class="keyword">if</span> (mParent != <span class="keyword">null</span> &amp;&amp; !mParent.<span class="attr">isLayoutRequested</span>()) {
+        mParent.<span class="attr">requestLayout</span>();
+    }
+    <span class="keyword">if</span> (mAttachInfo != <span class="keyword">null</span> &amp;&amp; mAttachInfo.<span class="attr">mViewRequestingLayout</span> == <span class="keyword">this</span>) {
+        mAttachInfo.<span class="attr">mViewRequestingLayout</span> = <span class="keyword">null</span>;
+    }
+}</pre></td></tr></table></figure>
 <p>当断点到<code>mParent.isLayoutRequested()</code>时发现，此时其<code>mParent</code>的<code>mPrivateFlags</code>存在标志位<code>PFLAG_FORCE_LAYOUT</code>即<code>mParent.isLayoutRequested()</code>返回的是<strong>true</strong></p>
 <p>而对于标志位<code>PFLAG_FORCE_LAYOUT</code>是在<code>forceLayout()</code>和<code>requestLayout()</code>时设置,layout结束时清空：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">layout</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ((mPrivateFlags3 &amp; PFLAG3_MEASURE_NEEDED_BEFORE_LAYOUT) != <span class="number">0</span>) &#123;</span><br><span class="line">        onMeasure(mOldWidthMeasureSpec, mOldHeightMeasureSpec);</span><br><span class="line">        mPrivateFlags3 &amp;= ~PFLAG3_MEASURE_NEEDED_BEFORE_LAYOUT;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> oldL = mLeft;</span><br><span class="line">    <span class="keyword">int</span> oldT = mTop;</span><br><span class="line">    <span class="keyword">int</span> oldB = mBottom;</span><br><span class="line">    <span class="keyword">int</span> oldR = mRight;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> changed = isLayoutModeOptical(mParent) ?</span><br><span class="line">            setOpticalFrame(l, t, r, b) : setFrame(l, t, r, b);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (changed || (mPrivateFlags &amp; PFLAG_LAYOUT_REQUIRED) == PFLAG_LAYOUT_REQUIRED) &#123;</span><br><span class="line">        <span class="comment">// onLayout</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mPrivateFlags &amp;= ~PFLAG_FORCE_LAYOUT;</span><br><span class="line">    mPrivateFlags3 |= PFLAG3_IS_LAID_OUT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="keyword">public</span> <span class="keyword">void</span> <span class="function">layout</span>(<span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b) {
+    <span class="keyword">if</span> ((mPrivateFlags3 &amp; PFLAG3_MEASURE_NEEDED_BEFORE_LAYOUT) != <span class="number">0</span>) {
+        onMeasure(mOldWidthMeasureSpec, mOldHeightMeasureSpec);
+        mPrivateFlags3 &amp;= ~PFLAG3_MEASURE_NEEDED_BEFORE_LAYOUT;
+    }
+
+    <span class="keyword">int</span> oldL = mLeft;
+    <span class="keyword">int</span> oldT = mTop;
+    <span class="keyword">int</span> oldB = mBottom;
+    <span class="keyword">int</span> oldR = mRight;
+
+    <span class="keyword">boolean</span> changed = isLayoutModeOptical(mParent) ?
+            setOpticalFrame(l, t, r, b) : setFrame(l, t, r, b);
+
+    <span class="keyword">if</span> (changed || (mPrivateFlags &amp; PFLAG_LAYOUT_REQUIRED) == PFLAG_LAYOUT_REQUIRED) {
+        <span class="comment">// onLayout</span>
+    }
+
+    mPrivateFlags &amp;= ~PFLAG_FORCE_LAYOUT;
+    mPrivateFlags3 |= PFLAG3_IS_LAID_OUT;
+}</pre></td></tr></table></figure>
 <p>此时，想到会不会是因为布局的父类只被requestLayout()而没有执行layout方法。对应的父类就是ViewPager，此时查看ViewPager的onLayout方法：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onLayout</span><span class="params">(<span class="keyword">boolean</span> changed, <span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">final</span> <span class="keyword">int</span> count = getChildCount();</span><br><span class="line">       <span class="keyword">int</span> width = r - l;</span><br><span class="line">       <span class="keyword">int</span> height = b - t;</span><br><span class="line">       <span class="keyword">int</span> paddingLeft = getPaddingLeft();</span><br><span class="line">       <span class="keyword">int</span> paddingTop = getPaddingTop();</span><br><span class="line">       <span class="keyword">int</span> paddingRight = getPaddingRight();</span><br><span class="line">       <span class="keyword">int</span> paddingBottom = getPaddingBottom();</span><br><span class="line">       <span class="keyword">final</span> <span class="keyword">int</span> scrollX = getScrollX();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">int</span> decorCount = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// First pass - decor views. We need to do this in two passes so that</span></span><br><span class="line">       <span class="comment">// we have the proper offsets for non-decor views later.</span></span><br><span class="line">       <span class="comment">//省略第一步的代码，此段代码只对应layout DecorView</span></span><br><span class="line">       </span><br><span class="line">       <span class="comment">//如下代码计算子布局</span></span><br><span class="line">       <span class="keyword">final</span> <span class="keyword">int</span> childWidth = width - paddingLeft - paddingRight;</span><br><span class="line">       <span class="comment">// Page views. Do this once we have the right padding offsets from above.</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">           <span class="keyword">final</span> View child = getChildAt(i);</span><br><span class="line">           <span class="keyword">if</span> (child.getVisibility() != GONE) &#123;</span><br><span class="line">               <span class="keyword">final</span> LayoutParams lp = (LayoutParams) child.getLayoutParams();</span><br><span class="line">               ItemInfo ii;</span><br><span class="line">               <span class="comment">// 查看是否为DectorView并且当前子布局在缓存的列表中存在。坑就在这里</span></span><br><span class="line">               <span class="keyword">if</span> (!lp.isDecor &amp;&amp; (ii = infoForChild(child)) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   <span class="keyword">int</span> loff = (<span class="keyword">int</span>) (childWidth * ii.offset);</span><br><span class="line">                   <span class="keyword">int</span> childLeft = paddingLeft + loff;</span><br><span class="line">                   <span class="keyword">int</span> childTop = paddingTop;</span><br><span class="line">                   <span class="keyword">if</span> (lp.needsMeasure) &#123;</span><br><span class="line">                       <span class="comment">// This was added during layout and needs measurement.</span></span><br><span class="line">                       <span class="comment">// Do it now that we know what we're working with.</span></span><br><span class="line">                       lp.needsMeasure = <span class="keyword">false</span>;</span><br><span class="line">                       <span class="keyword">final</span> <span class="keyword">int</span> widthSpec = MeasureSpec.makeMeasureSpec(</span><br><span class="line">                               (<span class="keyword">int</span>) (childWidth * lp.widthFactor),</span><br><span class="line">                               MeasureSpec.EXACTLY);</span><br><span class="line">                       <span class="keyword">final</span> <span class="keyword">int</span> heightSpec = MeasureSpec.makeMeasureSpec(</span><br><span class="line">                               (<span class="keyword">int</span>) (height - paddingTop - paddingBottom),</span><br><span class="line">                               MeasureSpec.EXACTLY);</span><br><span class="line">                       child.measure(widthSpec, heightSpec);</span><br><span class="line">                   &#125;</span><br><span class="line">                   <span class="keyword">if</span> (DEBUG) Log.v(TAG, <span class="string">"Positioning #"</span> + i + <span class="string">" "</span> + child + <span class="string">" f="</span> + ii.object</span><br><span class="line">                           + <span class="string">":"</span> + childLeft + <span class="string">","</span> + childTop + <span class="string">" "</span> + child.getMeasuredWidth()</span><br><span class="line">                           + <span class="string">"x"</span> + child.getMeasuredHeight());</span><br><span class="line">                   child.layout(childLeft, childTop,</span><br><span class="line">                           childLeft + child.getMeasuredWidth(),</span><br><span class="line">                           childTop + child.getMeasuredHeight());</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       mTopPageBounds = paddingTop;</span><br><span class="line">       mBottomPageBounds = height - paddingBottom;</span><br><span class="line">       mDecorChildCount = decorCount;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (mFirstLayout) &#123;</span><br><span class="line">           scrollToItem(mCurItem, <span class="keyword">false</span>, <span class="number">0</span>, <span class="keyword">false</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       mFirstLayout = <span class="keyword">false</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre>@Override
+   <span class="keyword">protected</span> <span class="keyword">void</span> <span class="function">onLayout</span>(<span class="keyword">boolean</span> changed, <span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b) {
+       <span class="keyword">final</span> <span class="keyword">int</span> count = getChildCount();
+       <span class="keyword">int</span> width = r - l;
+       <span class="keyword">int</span> height = b - t;
+       <span class="keyword">int</span> paddingLeft = getPaddingLeft();
+       <span class="keyword">int</span> paddingTop = getPaddingTop();
+       <span class="keyword">int</span> paddingRight = getPaddingRight();
+       <span class="keyword">int</span> paddingBottom = getPaddingBottom();
+       <span class="keyword">final</span> <span class="keyword">int</span> scrollX = getScrollX();
+
+       <span class="keyword">int</span> decorCount = <span class="number">0</span>;
+
+       <span class="comment">// First pass - decor views. We need to do this in two passes so that</span>
+       <span class="comment">// we have the proper offsets for non-decor views later.</span>
+       <span class="comment">//省略第一步的代码，此段代码只对应layout DecorView</span>
+
+       <span class="comment">//如下代码计算子布局</span>
+       <span class="keyword">final</span> <span class="keyword">int</span> childWidth = width - paddingLeft - paddingRight;
+       <span class="comment">// Page views. Do this once we have the right padding offsets from above.</span>
+       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) {
+           <span class="keyword">final</span> View child = getChildAt(i);
+           <span class="keyword">if</span> (child.<span class="attr">getVisibility</span>() != GONE) {
+               <span class="keyword">final</span> LayoutParams lp = (LayoutParams) child.<span class="attr">getLayoutParams</span>();
+               ItemInfo ii;
+               <span class="comment">// 查看是否为DectorView并且当前子布局在缓存的列表中存在。坑就在这里</span>
+               <span class="keyword">if</span> (!lp.<span class="attr">isDecor</span> &amp;&amp; (ii = infoForChild(child)) != <span class="keyword">null</span>) {
+                   <span class="keyword">int</span> loff = (<span class="keyword">int</span>) (childWidth * ii.<span class="attr">offset</span>);
+                   <span class="keyword">int</span> childLeft = paddingLeft + loff;
+                   <span class="keyword">int</span> childTop = paddingTop;
+                   <span class="keyword">if</span> (lp.<span class="attr">needsMeasure</span>) {
+                       <span class="comment">// This was added during layout and needs measurement.</span>
+                       <span class="comment">// Do it now that we know what we&#x27;re working with.</span>
+                       lp.<span class="attr">needsMeasure</span> = <span class="keyword">false</span>;
+                       <span class="keyword">final</span> <span class="keyword">int</span> widthSpec = MeasureSpec.<span class="attr">makeMeasureSpec</span>(
+                               (<span class="keyword">int</span>) (childWidth * lp.<span class="attr">widthFactor</span>),
+                               MeasureSpec.<span class="attr">EXACTLY</span>);
+                       <span class="keyword">final</span> <span class="keyword">int</span> heightSpec = MeasureSpec.<span class="attr">makeMeasureSpec</span>(
+                               (<span class="keyword">int</span>) (height - paddingTop - paddingBottom),
+                               MeasureSpec.<span class="attr">EXACTLY</span>);
+                       child.<span class="attr">measure</span>(widthSpec, heightSpec);
+                   }
+                   <span class="keyword">if</span> (DEBUG) Log.<span class="attr">v</span>(TAG, <span class="string">&quot;</span><span class="string">Positioning #</span><span class="string">&quot;</span> + i + <span class="string">&quot;</span><span class="string"> </span><span class="string">&quot;</span> + child + <span class="string">&quot;</span><span class="string"> f=</span><span class="string">&quot;</span> + ii.<span class="attr">object</span>
+                           + <span class="string">&quot;</span><span class="string">:</span><span class="string">&quot;</span> + childLeft + <span class="string">&quot;</span><span class="string">,</span><span class="string">&quot;</span> + childTop + <span class="string">&quot;</span><span class="string"> </span><span class="string">&quot;</span> + child.<span class="attr">getMeasuredWidth</span>()
+                           + <span class="string">&quot;</span><span class="string">x</span><span class="string">&quot;</span> + child.<span class="attr">getMeasuredHeight</span>());
+                   child.<span class="attr">layout</span>(childLeft, childTop,
+                           childLeft + child.<span class="attr">getMeasuredWidth</span>(),
+                           childTop + child.<span class="attr">getMeasuredHeight</span>());
+               }
+           }
+       }
+       mTopPageBounds = paddingTop;
+       mBottomPageBounds = height - paddingBottom;
+       mDecorChildCount = decorCount;
+
+       <span class="keyword">if</span> (mFirstLayout) {
+           scrollToItem(mCurItem, <span class="keyword">false</span>, <span class="number">0</span>, <span class="keyword">false</span>);
+       }
+       mFirstLayout = <span class="keyword">false</span>;
+   }</pre></td></tr></table></figure>
 <p>在上面的判断中会判断是否存在<code>ViewPager</code>缓存的列表中，而这个列表维护是在起当有元素新增时添加，当元素移除时删除。坑就在这里。</p>
 <p><strong>在当前项目，由于没有设置默认绘制的数量，使用了其默认数量即当前+1+1（一前一后），此时如果当切换的Item超过了这个数量，布局的里面的列表item就不会包括切换前的那个布局，就导致切换前的那个布局无法<code>layout()</code>。从而导致了后面的一系列问题（子View的<code>requestLayout()</code>无法响应）</strong>。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<h3 id="总结"><a class="headerlink" href="#总结" title="链接到此段落"></a>总结</h3>
+<ol>
 <li>当自定义了如下adapter之后，可通过再次调用<code>requestLayout()</code>来解决</li>
 <li>可通过<code>ViewPager</code>的<code>ViewPager.setOffscreenPageLimit(int limit)</code>进行控制</li>
 </ol>
-<h2 id="代码区"><a href="#代码区" class="headerlink" title="代码区"></a>代码区</h2><h4 id="NoDestroyItemFragmentAdapter"><a href="#NoDestroyItemFragmentAdapter" class="headerlink" title="NoDestroyItemFragmentAdapter"></a><a id="wt-name-adapter"></a>NoDestroyItemFragmentAdapter</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Copyright (C) 2011 The Android Open Source Project</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Licensed under the Apache License, Version 2.0 (the "License");</span></span><br><span class="line"><span class="comment"> * you may not use this file except in compliance with the License.</span></span><br><span class="line"><span class="comment"> * You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *      http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"> * distributed under the License is distributed on an "AS IS" BASIS,</span></span><br><span class="line"><span class="comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"> * See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"> * limitations under the License.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.os.Parcelable;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentManager;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentTransaction;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.view.PagerAdapter;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.view.ViewGroup;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">NoDestroyItemFragmentAdapter</span> <span class="keyword">extends</span> <span class="title">PagerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"taptapada"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> DEBUG = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> FragmentManager mFragmentManager;</span><br><span class="line">    <span class="keyword">private</span> FragmentTransaction mCurTransaction = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ArrayList&lt;Fragment.SavedState&gt; mSavedState = <span class="keyword">new</span> ArrayList&lt;Fragment.SavedState&gt;();</span><br><span class="line">    <span class="keyword">private</span> ArrayList&lt;Fragment&gt; mFragments = <span class="keyword">new</span> ArrayList&lt;Fragment&gt;();</span><br><span class="line">    <span class="keyword">private</span> Fragment mCurrentPrimaryItem = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NoDestroyItemFragmentAdapter</span><span class="params">(FragmentManager fm)</span> </span>&#123;</span><br><span class="line">        mFragmentManager = fm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Return the Fragment associated with a specified position.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startUpdate</span><span class="params">(ViewGroup container)</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">instantiateItem</span><span class="params">(ViewGroup container, <span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// If we already have this item instantiated, there is nothing</span></span><br><span class="line">        <span class="comment">// to do.  This can happen when we are restoring the entire pager</span></span><br><span class="line">        <span class="comment">// from its saved state, where the fragment manager has already</span></span><br><span class="line">        <span class="comment">// taken care of restoring the fragments we previously had instantiated.</span></span><br><span class="line">        <span class="keyword">if</span> (mFragments.size() &gt; position) &#123;</span><br><span class="line">            Fragment f = mFragments.get(position);</span><br><span class="line">            <span class="keyword">if</span> (f != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> f;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mCurTransaction == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mCurTransaction = mFragmentManager.beginTransaction();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Fragment fragment = getItem(position);</span><br><span class="line">        <span class="keyword">if</span> (mSavedState.size() &gt; position) &#123;</span><br><span class="line">            Fragment.SavedState fss = mSavedState.get(position);</span><br><span class="line">            <span class="keyword">if</span> (fss != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fragment.setInitialSavedState(fss);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (mFragments.size() &lt;= position) &#123;</span><br><span class="line">            mFragments.add(<span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        fragment.setMenuVisibility(<span class="keyword">false</span>);</span><br><span class="line">        fragment.setUserVisibleHint(<span class="keyword">false</span>);</span><br><span class="line">        mFragments.set(position, fragment);</span><br><span class="line">        mCurTransaction.add(container.getId(), fragment);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> fragment;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroyItem</span><span class="params">(ViewGroup container, <span class="keyword">int</span> position, Object object)</span> </span>&#123;</span><br><span class="line"><span class="comment">//        Fragment fragment = (Fragment) object;</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//        if (mCurTransaction == null) &#123;</span></span><br><span class="line"><span class="comment">//            mCurTransaction = mFragmentManager.beginTransaction();</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        if (DEBUG) Log.v(TAG, "Removing item #" + position + ": f=" + object</span></span><br><span class="line"><span class="comment">//                + " v=" + ((Fragment)object).getView());</span></span><br><span class="line"><span class="comment">//        while (mSavedState.size() &lt;= position) &#123;</span></span><br><span class="line"><span class="comment">//            mSavedState.add(null);</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        mSavedState.set(position, fragment.isAdded()</span></span><br><span class="line"><span class="comment">//                ? mFragmentManager.saveFragmentInstanceState(fragment) : null);</span></span><br><span class="line"><span class="comment">//        mFragments.set(position, null);</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//        mCurTransaction.remove(fragment);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPrimaryItem</span><span class="params">(ViewGroup container, <span class="keyword">int</span> position, Object object)</span> </span>&#123;</span><br><span class="line">        Fragment fragment = (Fragment)object;</span><br><span class="line">        <span class="keyword">if</span> (fragment != mCurrentPrimaryItem) &#123;</span><br><span class="line">            <span class="keyword">if</span> (mCurrentPrimaryItem != <span class="keyword">null</span>) &#123;</span><br><span class="line">                mCurrentPrimaryItem.setMenuVisibility(<span class="keyword">false</span>);</span><br><span class="line">                mCurrentPrimaryItem.setUserVisibleHint(<span class="keyword">false</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (fragment != <span class="keyword">null</span>) &#123;</span><br><span class="line">                fragment.setMenuVisibility(<span class="keyword">true</span>);</span><br><span class="line">                fragment.setUserVisibleHint(<span class="keyword">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            mCurrentPrimaryItem = fragment;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">finishUpdate</span><span class="params">(ViewGroup container)</span> </span>&#123;</span><br><span class="line"><span class="comment">//        if (mCurTransaction == null) &#123;</span></span><br><span class="line"><span class="comment">//            mCurTransaction = mFragmentManager.beginTransaction();</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line">        <span class="keyword">if</span> (mCurTransaction != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mCurTransaction.commitAllowingStateLoss();</span><br><span class="line">            mCurTransaction = <span class="keyword">null</span>;</span><br><span class="line">            mFragmentManager.executePendingTransactions();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isViewFromObject</span><span class="params">(View view, Object object)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ((Fragment)object).getView() == view;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Parcelable <span class="title">saveState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Bundle state = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (mSavedState.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            state = <span class="keyword">new</span> Bundle();</span><br><span class="line">            Fragment.SavedState[] fss = <span class="keyword">new</span> Fragment.SavedState[mSavedState.size()];</span><br><span class="line">            mSavedState.toArray(fss);</span><br><span class="line">            state.putParcelableArray(<span class="string">"states"</span>, fss);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;mFragments.size(); i++) &#123;</span><br><span class="line">            Fragment f = mFragments.get(i);</span><br><span class="line">            <span class="keyword">if</span> (f != <span class="keyword">null</span> &amp;&amp; f.isAdded()) &#123;</span><br><span class="line">                <span class="keyword">if</span> (state == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    state = <span class="keyword">new</span> Bundle();</span><br><span class="line">                &#125;</span><br><span class="line">                String key = <span class="string">"f"</span> + i;</span><br><span class="line">                mFragmentManager.putFragment(state, key, f);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">restoreState</span><span class="params">(Parcelable state, ClassLoader loader)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (state != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Bundle bundle = (Bundle)state;</span><br><span class="line">            bundle.setClassLoader(loader);</span><br><span class="line">            Parcelable[] fss = bundle.getParcelableArray(<span class="string">"states"</span>);</span><br><span class="line">            mSavedState.clear();</span><br><span class="line">            mFragments.clear();</span><br><span class="line">            <span class="keyword">if</span> (fss != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;fss.length; i++) &#123;</span><br><span class="line">                    mSavedState.add((Fragment.SavedState)fss[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            Iterable&lt;String&gt; keys = bundle.keySet();</span><br><span class="line">            <span class="keyword">for</span> (String key: keys) &#123;</span><br><span class="line">                <span class="keyword">if</span> (key.startsWith(<span class="string">"f"</span>)) &#123;</span><br><span class="line">                    <span class="keyword">int</span> index = Integer.parseInt(key.substring(<span class="number">1</span>));</span><br><span class="line">                    Fragment f = mFragmentManager.getFragment(bundle, key);</span><br><span class="line">                    <span class="keyword">if</span> (f != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">while</span> (mFragments.size() &lt;= index) &#123;</span><br><span class="line">                            mFragments.add(<span class="keyword">null</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                        f.setMenuVisibility(<span class="keyword">false</span>);</span><br><span class="line">                        mFragments.set(index, f);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        Log.w(TAG, <span class="string">"Bad fragment at key "</span> + key);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</div><footer class="article-footer"><a class="back-to-notes" href="/archives/">← 返回全部文章</a></footer><nav class="neighbor-notes" aria-label="相邻文章"><a href="/2017/03/17/wt-android-studio-show-sdkmanager/"><span>上一篇</span><strong>关于AndroidStudio2.3 SDKManagerGUI隐藏问题</strong><span class="arrow" aria-hidden="true">↗</span></a><a href="/2017/04/14/wt-php-install/"><span>下一篇</span><strong>PHP安装时403问题</strong><span class="arrow" aria-hidden="true">↗</span></a></nav></article><aside class="reading-aside" aria-label="文章导航"><div class="toc-sticky"><p class="toc-heading">本文目录 <span data-reading-percent>0%</span></p><nav aria-label="桌面文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-0"><a href="#BUG">BUG</a></li><li class="toc-level-1"><a href="#%E6%8F%8F%E8%BF%B0">描述</a></li><li class="toc-level-1"><a href="#%E8%A7%A3%E5%86%B3">解决</a></li><li class="toc-level-1"><a href="#%E5%88%86%E6%9E%90">分析</a></li><li class="toc-level-1"><a href="#%E6%80%BB%E7%BB%93">总结</a></li><li class="toc-level-0"><a href="#%E4%BB%A3%E7%A0%81%E5%8C%BA">代码区</a></li><li class="toc-level-2"><a href="#NoDestroyItemFragmentAdapter">NoDestroyItemFragmentAdapter</a></li></ol></nav><div class="toc-bottom"><a href="#main">回到顶部 ↑</a><span>慢慢读，也慢慢想。</span></div></div></aside></div>
+<h2 id="代码区"><a class="headerlink" href="#代码区" title="链接到此段落"></a>代码区</h2>
+<h4 id="NoDestroyItemFragmentAdapter"><a class="headerlink" href="#NoDestroyItemFragmentAdapter" title="链接到此段落"></a><a id="wt-name-adapter"></a>NoDestroyItemFragmentAdapter</h4>
+<figure class="highlight java"><table><tr><td class="code"><pre>
+<span class="comment">/*
+ * Copyright (C) 2011 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */</span>
+
+
+<span class="keyword">import</span> android.os.Bundle;
+<span class="keyword">import</span> android.os.Parcelable;
+<span class="keyword">import</span> android.support.v4.app.Fragment;
+<span class="keyword">import</span> android.support.v4.app.FragmentManager;
+<span class="keyword">import</span> android.support.v4.app.FragmentTransaction;
+<span class="keyword">import</span> android.support.v4.view.PagerAdapter;
+<span class="keyword">import</span> android.util.Log;
+<span class="keyword">import</span> android.view.View;
+<span class="keyword">import</span> android.view.ViewGroup;
+
+<span class="keyword">import</span> java.util.ArrayList;
+
+
+<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">NoDestroyItemFragmentAdapter</span> <span class="keyword">extends</span> PagerAdapter {
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">&quot;</span><span class="string">taptapada</span><span class="string">&quot;</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> DEBUG = <span class="keyword">false</span>;
+
+    <span class="keyword">private</span> <span class="keyword">final</span> FragmentManager mFragmentManager;
+    <span class="keyword">private</span> FragmentTransaction mCurTransaction = <span class="keyword">null</span>;
+
+    <span class="keyword">private</span> ArrayList&lt;Fragment.<span class="attr">SavedState</span>&gt; mSavedState = <span class="keyword">new</span> ArrayList&lt;Fragment.<span class="attr">SavedState</span>&gt;();
+    <span class="keyword">private</span> ArrayList&lt;Fragment&gt; mFragments = <span class="keyword">new</span> ArrayList&lt;Fragment&gt;();
+    <span class="keyword">private</span> Fragment mCurrentPrimaryItem = <span class="keyword">null</span>;
+
+    <span class="keyword">public</span> <span class="function">NoDestroyItemFragmentAdapter</span>(FragmentManager fm) {
+        mFragmentManager = fm;
+    }
+
+    <span class="comment">/**
+     * Return the Fragment associated with a specified position.
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">abstract</span> Fragment <span class="function">getItem</span>(<span class="keyword">int</span> position);
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">startUpdate</span>(ViewGroup container) {
+    }
+
+    @Override
+    <span class="keyword">public</span> Object <span class="function">instantiateItem</span>(ViewGroup container, <span class="keyword">int</span> position) {
+        <span class="comment">// If we already have this item instantiated, there is nothing</span>
+        <span class="comment">// to do.  This can happen when we are restoring the entire pager</span>
+        <span class="comment">// from its saved state, where the fragment manager has already</span>
+        <span class="comment">// taken care of restoring the fragments we previously had instantiated.</span>
+        <span class="keyword">if</span> (mFragments.<span class="attr">size</span>() &gt; position) {
+            Fragment f = mFragments.<span class="attr">get</span>(position);
+            <span class="keyword">if</span> (f != <span class="keyword">null</span>) {
+                <span class="keyword">return</span> f;
+            }
+        }
+
+        <span class="keyword">if</span> (mCurTransaction == <span class="keyword">null</span>) {
+            mCurTransaction = mFragmentManager.<span class="attr">beginTransaction</span>();
+        }
+
+        Fragment fragment = getItem(position);
+        <span class="keyword">if</span> (mSavedState.<span class="attr">size</span>() &gt; position) {
+            Fragment.<span class="attr">SavedState</span> fss = mSavedState.<span class="attr">get</span>(position);
+            <span class="keyword">if</span> (fss != <span class="keyword">null</span>) {
+                fragment.<span class="attr">setInitialSavedState</span>(fss);
+            }
+        }
+        <span class="keyword">while</span> (mFragments.<span class="attr">size</span>() &lt;= position) {
+            mFragments.<span class="attr">add</span>(<span class="keyword">null</span>);
+        }
+        fragment.<span class="attr">setMenuVisibility</span>(<span class="keyword">false</span>);
+        fragment.<span class="attr">setUserVisibleHint</span>(<span class="keyword">false</span>);
+        mFragments.<span class="attr">set</span>(position, fragment);
+        mCurTransaction.<span class="attr">add</span>(container.<span class="attr">getId</span>(), fragment);
+
+        <span class="keyword">return</span> fragment;
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">destroyItem</span>(ViewGroup container, <span class="keyword">int</span> position, Object object) {
+<span class="comment">//        Fragment fragment = (Fragment) object;</span>
+<span class="comment">//</span>
+<span class="comment">//        if (mCurTransaction == null) {</span>
+<span class="comment">//            mCurTransaction = mFragmentManager.beginTransaction();</span>
+<span class="comment">//        }</span>
+<span class="comment">//        if (DEBUG) Log.v(TAG, &quot;Removing item #&quot; + position + &quot;: f=&quot; + object</span>
+<span class="comment">//                + &quot; v=&quot; + ((Fragment)object).getView());</span>
+<span class="comment">//        while (mSavedState.size() &lt;= position) {</span>
+<span class="comment">//            mSavedState.add(null);</span>
+<span class="comment">//        }</span>
+<span class="comment">//        mSavedState.set(position, fragment.isAdded()</span>
+<span class="comment">//                ? mFragmentManager.saveFragmentInstanceState(fragment) : null);</span>
+<span class="comment">//        mFragments.set(position, null);</span>
+<span class="comment">//</span>
+<span class="comment">//        mCurTransaction.remove(fragment);</span>
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">setPrimaryItem</span>(ViewGroup container, <span class="keyword">int</span> position, Object object) {
+        Fragment fragment = (Fragment)object;
+        <span class="keyword">if</span> (fragment != mCurrentPrimaryItem) {
+            <span class="keyword">if</span> (mCurrentPrimaryItem != <span class="keyword">null</span>) {
+                mCurrentPrimaryItem.<span class="attr">setMenuVisibility</span>(<span class="keyword">false</span>);
+                mCurrentPrimaryItem.<span class="attr">setUserVisibleHint</span>(<span class="keyword">false</span>);
+            }
+            <span class="keyword">if</span> (fragment != <span class="keyword">null</span>) {
+                fragment.<span class="attr">setMenuVisibility</span>(<span class="keyword">true</span>);
+                fragment.<span class="attr">setUserVisibleHint</span>(<span class="keyword">true</span>);
+            }
+            mCurrentPrimaryItem = fragment;
+        }
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">finishUpdate</span>(ViewGroup container) {
+<span class="comment">//        if (mCurTransaction == null) {</span>
+<span class="comment">//            mCurTransaction = mFragmentManager.beginTransaction();</span>
+<span class="comment">//        }</span>
+        <span class="keyword">if</span> (mCurTransaction != <span class="keyword">null</span>) {
+            mCurTransaction.<span class="attr">commitAllowingStateLoss</span>();
+            mCurTransaction = <span class="keyword">null</span>;
+            mFragmentManager.<span class="attr">executePendingTransactions</span>();
+        }
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">boolean</span> <span class="function">isViewFromObject</span>(View view, Object object) {
+        <span class="keyword">return</span> ((Fragment)object).<span class="attr">getView</span>() == view;
+    }
+
+    @Override
+    <span class="keyword">public</span> Parcelable <span class="function">saveState</span>() {
+        Bundle state = <span class="keyword">null</span>;
+        <span class="keyword">if</span> (mSavedState.<span class="attr">size</span>() &gt; <span class="number">0</span>) {
+            state = <span class="keyword">new</span> Bundle();
+            Fragment.<span class="attr">SavedState</span>[] fss = <span class="keyword">new</span> Fragment.<span class="attr">SavedState</span>[mSavedState.<span class="attr">size</span>()];
+            mSavedState.<span class="attr">toArray</span>(fss);
+            state.<span class="attr">putParcelableArray</span>(<span class="string">&quot;</span><span class="string">states</span><span class="string">&quot;</span>, fss);
+        }
+        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;mFragments.<span class="attr">size</span>(); i++) {
+            Fragment f = mFragments.<span class="attr">get</span>(i);
+            <span class="keyword">if</span> (f != <span class="keyword">null</span> &amp;&amp; f.<span class="attr">isAdded</span>()) {
+                <span class="keyword">if</span> (state == <span class="keyword">null</span>) {
+                    state = <span class="keyword">new</span> Bundle();
+                }
+                String key = <span class="string">&quot;</span><span class="string">f</span><span class="string">&quot;</span> + i;
+                mFragmentManager.<span class="attr">putFragment</span>(state, key, f);
+            }
+        }
+        <span class="keyword">return</span> state;
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">restoreState</span>(Parcelable state, ClassLoader loader) {
+        <span class="keyword">if</span> (state != <span class="keyword">null</span>) {
+            Bundle bundle = (Bundle)state;
+            bundle.<span class="attr">setClassLoader</span>(loader);
+            Parcelable[] fss = bundle.<span class="attr">getParcelableArray</span>(<span class="string">&quot;</span><span class="string">states</span><span class="string">&quot;</span>);
+            mSavedState.<span class="attr">clear</span>();
+            mFragments.<span class="attr">clear</span>();
+            <span class="keyword">if</span> (fss != <span class="keyword">null</span>) {
+                <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;fss.<span class="attr">length</span>; i++) {
+                    mSavedState.<span class="attr">add</span>((Fragment.<span class="attr">SavedState</span>)fss[i]);
+                }
+            }
+            Iterable&lt;String&gt; keys = bundle.<span class="attr">keySet</span>();
+            <span class="keyword">for</span> (String key: keys) {
+                <span class="keyword">if</span> (key.<span class="attr">startsWith</span>(<span class="string">&quot;</span><span class="string">f</span><span class="string">&quot;</span>)) {
+                    <span class="keyword">int</span> index = Integer.<span class="attr">parseInt</span>(key.<span class="attr">substring</span>(<span class="number">1</span>));
+                    Fragment f = mFragmentManager.<span class="attr">getFragment</span>(bundle, key);
+                    <span class="keyword">if</span> (f != <span class="keyword">null</span>) {
+                        <span class="keyword">while</span> (mFragments.<span class="attr">size</span>() &lt;= index) {
+                            mFragments.<span class="attr">add</span>(<span class="keyword">null</span>);
+                        }
+                        f.<span class="attr">setMenuVisibility</span>(<span class="keyword">false</span>);
+                        mFragments.<span class="attr">set</span>(index, f);
+                    } <span class="keyword">else</span> {
+                        Log.<span class="attr">w</span>(TAG, <span class="string">&quot;</span><span class="string">Bad fragment at key </span><span class="string">&quot;</span> + key);
+                    }
+                }
+            }
+        }
+    }
+}</pre></td></tr></table></figure></div><footer class="article-footer"><a class="back-to-notes" href="/archives/">← 返回全部文章</a></footer><nav class="neighbor-notes" aria-label="相邻文章"><a href="/2017/03/17/wt-android-studio-show-sdkmanager/"><span>上一篇</span><strong>关于AndroidStudio2.3 SDKManagerGUI隐藏问题</strong><span class="arrow" aria-hidden="true">↗</span></a><a href="/2017/04/14/wt-php-install/"><span>下一篇</span><strong>PHP安装时403问题</strong><span class="arrow" aria-hidden="true">↗</span></a></nav></article><aside class="reading-aside" aria-label="文章导航"><div class="toc-sticky"><p class="toc-heading">本文目录 <span data-reading-percent>0%</span></p><nav aria-label="桌面文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-0"><a href="#BUG">BUG</a></li><li class="toc-level-1"><a href="#%E6%8F%8F%E8%BF%B0">描述</a></li><li class="toc-level-1"><a href="#%E8%A7%A3%E5%86%B3">解决</a></li><li class="toc-level-1"><a href="#%E5%88%86%E6%9E%90">分析</a></li><li class="toc-level-1"><a href="#%E6%80%BB%E7%BB%93">总结</a></li><li class="toc-level-0"><a href="#%E4%BB%A3%E7%A0%81%E5%8C%BA">代码区</a></li><li class="toc-level-2"><a href="#NoDestroyItemFragmentAdapter">NoDestroyItemFragmentAdapter</a></li></ol></nav><div class="toc-bottom"><a href="#main">回到顶部 ↑</a><span>慢慢读，也慢慢想。</span></div></div></aside></div>
 </main><footer class="wrap foot"><span class="signature">© 2026 wangbax</span><div><a href="/project/">项目</a><a href="/archives/">文章</a><a href="/about/">关于我</a><a href="https://github.com/wangbax" target="_blank" rel="noopener">GitHub ↗</a></div></footer><dialog class="search-dialog" id="site-search" aria-labelledby="search-title">
 <div class="search-dialog-head"><h2 id="search-title">找一篇手记</h2><form method="dialog"><button type="submit" class="search-close" aria-label="关闭搜索">×</button></form></div>
 <div class="search-widget" data-search-widget>

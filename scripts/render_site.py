@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the personal website from article fragments and site content."""
+"""Render the personal website from Markdown posts and site content."""
 
 import argparse
 from functools import lru_cache
@@ -11,11 +11,13 @@ from pathlib import Path
 import re
 from urllib.parse import quote
 
+from markdown_posts import load_posts
+
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
 SITE = json.loads((CONTENT / "site.json").read_text())
-POSTS = json.loads((CONTENT / "posts.json").read_text())
+POSTS = load_posts(CONTENT / "posts")
 IMAGES = json.loads((CONTENT / "images.json").read_text())
 PAGES = [
     "index.html", "about/index.html", "project/index.html",
@@ -74,7 +76,10 @@ def article_images(body):
         parser.feed(match.group())
         attrs = parser.attributes
         source = attrs["src"]
-        image = IMAGES[source]
+        image = IMAGES.get(source)
+        if image is None:
+            dimensions = "".join(f' {name}="{e(attrs[name])}"' for name in ["width", "height"] if attrs.get(name, "").isdigit())
+            return f'<img src="{e(source)}" alt="{e(attrs.get("alt", ""))}"{dimensions} loading="lazy" decoding="async">'
         srcset = ", ".join(f'{asset(item["path"])} {item["width"]}w' for item in image["variants"])
         sizes = f'(max-width: 650px) min({image["width"]}px, calc(100vw - 40px)), (max-width: 1000px) min({image["width"]}px, calc(100vw - 316px)), {min(image["width"], 760)}px'
         fallback = f'<img src="{e(asset(source))}" width="{image["width"]}" height="{image["height"]}" style="aspect-ratio:{image["width"]}/{image["height"]}" alt="{e(attrs.get("alt", ""))}" loading="lazy" decoding="async" data-original="{e(asset(source))}">'
@@ -187,7 +192,7 @@ def note(post, title=None):
 
 
 def home_page():
-    notes = "".join(note(POST_BY_URL[item["url"]], item["title"]) for item in SITE["notes"])
+    notes = "".join(note(post) for post in POSTS[:3])
     body = f'''<main id="main" class="wrap">
 <section class="hero" aria-labelledby="home-name"><div class="space" aria-hidden="true"><canvas id="universe" data-planet-module="{asset('/js/planet.js')}"></canvas></div><div class="planet-control" aria-hidden="true"></div><div class="hero-content"><div class="eyebrow reveal">A SPACE FOR CURIOSITY</div><h1 class="reveal" id="home-name">wangbax<span>.</span></h1><h2 class="reveal">在代码与灵感之间。</h2><p class="reveal">你好，欢迎来到我的一小片宇宙。<br>这里有做过的小项目，也有开发路上的问题与发现。</p><div class="hero-actions reveal"><a class="primary" href="#projects">探索项目 {ARROW}</a><a class="secondary" href="#notes">读一篇手记 ↓</a></div></div><div class="orbit-label" aria-hidden="true">IDEAS IN ORBIT</div><div class="hero-foot">保持耐心，持续探索。 &nbsp; / &nbsp; BE PATIENT, BE LEARNING.</div></section>
 <section class="work" id="projects"><div class="section-head"><h2>探索与作品 <small>PROJECTS</small></h2><a href="/project/">全部项目 →</a></div>{projects()}</section>
@@ -207,7 +212,7 @@ def toc_links(headings):
 
 
 def article_page(post):
-    body = article_images((CONTENT / post["body"]).read_text())
+    body = article_images(post["body"])
     info = ArticleInfo(body)
     text = " ".join(info.text)
     minutes = max(1, round(len(re.findall(r"[\u4e00-\u9fff]", text)) / 380 + len(re.findall(r"[a-zA-Z]+", text)) / 200))
@@ -271,15 +276,12 @@ def render_page(name):
 
 def render_search():
     entries = [{"title": post["title"], "url": post["url"], "date": post["published"][:10],
-                "content": re.sub(r"\s+", " ", "".join(ArticleInfo((CONTENT / post["body"]).read_text()).text)).strip()}
+                "content": re.sub(r"\s+", " ", "".join(ArticleInfo(post["body"]).text)).strip()}
                for post in POSTS]
     return json.dumps(entries, ensure_ascii=False, separators=(",", ":")) + "\n"
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--check", action="store_true", help="Fail when generated pages differ from their source")
-    args = parser.parse_args()
+def build_site(check=False):
     for name, image in IMAGES.items():
         if hashlib.sha256((ROOT / name.lstrip("/")).read_bytes()).hexdigest() != image["source_sha256"]:
             raise SystemExit("Regenerate responsive images with scripts/optimize_images.py: " + name)
@@ -291,12 +293,19 @@ def main():
         target = ROOT / path
         if not target.is_file() or target.read_text() != rendered:
             changed.append(path)
-            if not args.check:
+            if not check:
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(rendered)
-    if args.check and changed:
+    if check and changed:
         raise SystemExit("Regenerate the site with scripts/render_site.py: " + ", ".join(changed))
-    print(json.dumps({"pages": len(PAGES), "articles": len(POSTS), "changed": len(changed), "mode": "check" if args.check else "render"}))
+    return {"pages": len(PAGES), "articles": len(POSTS), "changed": len(changed), "mode": "check" if check else "render"}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true", help="Fail when generated pages differ from their source")
+    args = parser.parse_args()
+    print(json.dumps(build_site(check=args.check)))
 
 
 if __name__ == "__main__":

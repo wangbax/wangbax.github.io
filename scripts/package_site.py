@@ -11,14 +11,11 @@ import subprocess
 import tarfile
 from urllib.parse import urlsplit
 
+from render_site import PAGES, build_site
 
-SITE_DIRECTORIES = {
-    "2016", "2017", "about", "archives", "css",
-    "images", "js", "project", "search",
-}
-SITE_FILES = {
-    "index.html", "404.html", "search.json",
-}
+
+ASSET_DIRECTORIES = {"images", "js"}
+GENERATED_FILES = set(PAGES) | {"css/app.css", "search.json"}
 SOURCE_ASSETS = {"css/site.css", "css/pages.css", "css/theme.css", "js/theme.js"}
 
 
@@ -43,22 +40,21 @@ def main():
         parser.error("--site-url must be an HTTP(S) origin without credentials, a path, query or fragment")
 
     root = Path(__file__).resolve().parent.parent
+    build_site()
     tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=root)
+    names = GENERATED_FILES | {name.decode("utf-8") for name in tracked.split(bytes([0])) if name}
     selected = []
-    for encoded_name in tracked.split(bytes([0])):
-        if not encoded_name:
-            continue
-        name = encoded_name.decode("utf-8")
+    for name in sorted(names):
         if name in SOURCE_ASSETS:
             continue
         relative = Path(name)
-        if relative.parts[0] not in SITE_DIRECTORIES and name not in SITE_FILES:
+        if relative.parts[0] not in ASSET_DIRECTORIES and name not in GENERATED_FILES:
             continue
         path = root / relative
         if path.is_symlink() or not path.resolve().is_relative_to(root):
             raise SystemExit("Refusing to package a symlink or external file: " + name)
         if not path.is_file():
-            raise SystemExit("Tracked site file is missing: " + name)
+            raise SystemExit("Site file is missing: " + name)
         selected.append((name, path))
     required = {"index.html", "404.html", "css/app.css", "js/site.js", "js/article.js", "js/search.js", "js/planet.js", "search.json"}
     if not required.issubset({name for name, _ in selected}):
