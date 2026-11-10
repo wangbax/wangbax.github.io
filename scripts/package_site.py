@@ -59,7 +59,7 @@ def main():
         if not path.is_file():
             raise SystemExit("Tracked site file is missing: " + name)
         selected.append((name, path))
-    required = {"index.html", "404.html", "css/site.css", "css/pages.css", "js/site.js", "search.xml"}
+    required = {"index.html", "404.html", "css/site.css", "css/pages.css", "js/site.js", "js/planet.js", "search.xml"}
     if not required.issubset({name for name, _ in selected}):
         raise SystemExit("Required site files are missing")
 
