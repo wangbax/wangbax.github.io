@@ -1,0 +1,63 @@
+name: Validate and deploy to ECS
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ecs-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check deployment scripts
+        run: |
+          bash -n deploy/publish.sh scripts/install_workbench.sh
+          python3 -m py_compile scripts/package_site.py scripts/check_site.py scripts/ci_deploy.py
+      - name: Build and validate the site
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'http://101.132.127.138' }}
+        run: |
+          python3 scripts/package_site.py --site-url "$SITE_URL"
+          python3 scripts/check_site.py .release/site.tar.gz
+
+  deploy:
+    needs: validate
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install Workbench CLI
+        run: bash scripts/install_workbench.sh
+      - name: Obtain temporary Alibaba Cloud credentials
+        uses: aliyun/configure-aliyun-credentials-action@1e5248c8d5d93a8781ac344a68e19a43341e79e6 # v1
+        with:
+          oidc-provider-arn: ${{ vars.ALIBABA_CLOUD_OIDC_PROVIDER_ARN }}
+          role-to-assume: ${{ vars.ALIBABA_CLOUD_ROLE_ARN }}
+          role-session-name: github-${{ github.run_id }}
+          role-session-expiration: 1800
+          audience: sts.aliyuncs.com
+      - name: Package, publish and verify
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          ECS_INSTANCE_ID: ${{ vars.ECS_INSTANCE_ID }}
+          ECS_REGION: ${{ vars.ECS_REGION }}
+        run: python3 scripts/ci_deploy.py

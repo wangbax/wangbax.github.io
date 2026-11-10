@@ -1,0 +1,23 @@
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": [
+          "acs:ram::1717475122021143:oidc-provider/github-wangbax-pages"
+        ]
+      },
+      "Action": [
+        "sts:AssumeRole"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "oidc:iss": "https://token.actions.githubusercontent.com",
+          "oidc:aud": "sts.aliyuncs.com",
+          "oidc:sub": "repo:wangbax@5964735/wangbax.github.io@164980261:ref:refs/heads/main"
+        }
+      }
+    }
+  ]
+}
