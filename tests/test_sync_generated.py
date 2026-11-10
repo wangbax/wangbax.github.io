@@ -88,6 +88,27 @@ class SyncGeneratedTest(unittest.TestCase):
         self.assertFalse(result["changed"])
         self.assertEqual(self.remote_tip(), self.source_sha)
 
+    def test_rerun_reuses_the_existing_generated_commit(self):
+        self.generate()
+        first = sync_generated.sync_generated(self.root, self.source_sha, self.outputs)
+        self.git_call(self.root, "checkout", "--detach", self.source_sha)
+        self.generate()
+        second = sync_generated.sync_generated(self.root, self.source_sha, self.outputs)
+        self.assertTrue(second["ready"])
+        self.assertFalse(second["changed"])
+        self.assertEqual(second["commit"], first["commit"])
+        self.assertEqual(self.remote_tip(), first["commit"])
+
+    def test_rerun_rejects_different_generated_content(self):
+        self.generate()
+        first = sync_generated.sync_generated(self.root, self.source_sha, self.outputs)
+        self.git_call(self.root, "checkout", "--detach", self.source_sha)
+        self.generate()
+        self.write("index.html", "different output for the same source")
+        with self.assertRaisesRegex(ValueError, "已提交产物与本次生成结果不一致"):
+            sync_generated.sync_generated(self.root, self.source_sha, self.outputs)
+        self.assertEqual(self.remote_tip(), first["commit"])
+
     def test_stale_build_does_not_stage_or_push(self):
         self.generate()
         latest = self.advance_main()

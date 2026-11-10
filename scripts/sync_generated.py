@@ -30,9 +30,15 @@ def sync_generated(root, source_sha, outputs):
         raise ValueError("当前 checkout 与本次构建的源码版本不一致，停止回写。")
     if git(root, "diff", "--cached", "--name-only"):
         raise ValueError("暂存区已有改动，停止回写，避免提交非生成文件。")
-    if remote_head(root) != source_sha:
-        print("main 已有更新，跳过本次旧构建的回写和部署。")
-        return {"ready": False, "commit": source_sha, "changed": False}
+    latest = remote_head(root)
+    reuse = latest != source_sha
+    if reuse:
+        git(root, "fetch", "--no-tags", "origin", "refs/heads/main")
+        if (git(root, "rev-parse", "FETCH_HEAD") != latest
+                or git(root, "show", "-s", "--format=%P", latest) != source_sha
+                or "Source-commit: " + source_sha not in git(root, "show", "-s", "--format=%B", latest).splitlines()):
+            print("main 已有更新，跳过本次旧构建的回写和部署。")
+            return {"ready": False, "commit": source_sha, "changed": False}
 
     outputs = set(outputs)
     if not outputs:
@@ -46,6 +52,11 @@ def sync_generated(root, source_sha, outputs):
     if stale:
         git(root, "rm", "--", *sorted(stale))
     git(root, "add", "--", *sorted(outputs))
+    if reuse:
+        if git(root, "write-tree") != git(root, "rev-parse", latest + "^{tree}"):
+            raise ValueError("同一源码版本的已提交产物与本次生成结果不一致，请从最新 main 重新触发。")
+        print("复用同一源码版本已回写的产物，继续部署：" + latest)
+        return {"ready": True, "commit": latest, "changed": False}
     if not git(root, "diff", "--cached", "--name-only"):
         print("生成产物没有变化，无需新增 commit。")
         return {"ready": True, "commit": source_sha, "changed": False}
