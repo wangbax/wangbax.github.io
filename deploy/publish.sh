@@ -42,7 +42,11 @@ install -d -m 755 "$site_base" "${site_base}/releases" "$release_dir"
 tar --extract --gzip --file "$archive" --directory "$release_dir" --no-same-owner --no-same-permissions
 test -f "${release_dir}/index.html"
 test -f "${release_dir}/404.html"
-test -f "${release_dir}/css/main.css"
+test -f "${release_dir}/css/site.css"
+test -f "${release_dir}/css/pages.css"
+test -f "${release_dir}/js/site.js"
+test -f "${release_dir}/js/planet.js"
+test -f "${release_dir}/search.xml"
 find "$release_dir" -type d -exec chmod 755 {} +
 find "$release_dir" -type f -exec chmod 644 {} +
 if command -v restorecon >/dev/null 2>&1; then

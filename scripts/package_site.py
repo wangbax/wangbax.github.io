@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 SITE_DIRECTORIES = {
     "2016", "2017", "about", "archives", "categories", "css",
-    "images", "js", "lib", "link", "page", "project", "search", "tags",
+    "images", "js", "link", "page", "project", "search", "tags",
 }
 SITE_FILES = {
     "index.html", "404.html", "favicon.ico", "search.xml",
@@ -59,7 +59,7 @@ def main():
         if not path.is_file():
             raise SystemExit("Tracked site file is missing: " + name)
         selected.append((name, path))
-    required = {"index.html", "404.html", "css/main.css", "search.xml"}
+    required = {"index.html", "404.html", "css/site.css", "css/pages.css", "js/site.js", "js/planet.js", "search.xml"}
     if not required.issubset({name for name, _ in selected}):
         raise SystemExit("Required site files are missing")
 

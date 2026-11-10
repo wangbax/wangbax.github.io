@@ -1,0 +1,8 @@
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>在PHP安装和配置过程中，遇到一个坑，当配置nginx.conf时，项目路径<strong>root</strong>设置为非Nginx默认路径<code>/usr/local/var/www</code>,比如<code>/Users/wt/Documents/workspace_php/Test</code>时，会一直报403 Forbidden.</p>
+<a id="more"></a>
+<h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><ol>
+<li>检查<strong>nginx.conf</strong>设置是否正确，并确认对应路径是否有设置的启动文件<code>index.html index.php</code>等</li>
+<li>通过 <code>whoami</code>获取当前自己用户，<code>id -g -n $whoami</code>获取当前自己的用户组</li>
+<li>设置<strong>nginx.conf</strong>中<code>#user nobody</code>为 <code>user [用户] [用户组]</code></li>
+</ol>
+<h3 id="鸣谢"><a href="#鸣谢" class="headerlink" title="鸣谢"></a>鸣谢</h3><p><a href="https://segmentfault.com/a/1190000005090828" target="_blank" rel="noopener">Mac 下 Nginx、PHP、MySQL 和 PHP-fpm 的安装和配置</a><br><a href="https://serverfault.com/questions/742482/getgrnamuser-failed-in-etc-nginx-nginx-conf" target="_blank" rel="noopener">getgrnam(“user”) failed in /etc/nginx/nginx.conf</a></p>
