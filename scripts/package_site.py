@@ -72,8 +72,8 @@ def main():
                 for name, path in sorted(selected):
                     content = path.read_bytes()
                     if path.suffix in {".html", ".xml"}:
-                        for old_origin in (b"https://iwyatt.cc", b"http://iwyatt.cc"):
-                            content = content.replace(old_origin, origin.encode("utf-8"))
+                        for source_origin in (b"https://www.wangbaxai.top", b"http://www.wangbaxai.top"):
+                            content = content.replace(source_origin, origin.encode("utf-8"))
                     info = tarfile.TarInfo(name)
                     info.size = len(content)
                     info.mode = 0o644

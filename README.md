@@ -6,7 +6,7 @@
 
 ## 致谢
 
-- [原博客源码](https://github.com/Tobyyyyyyyyyy/Tobyyyyyyyyyy.github.io)
+- [Hexo 源码](https://github.com/wangbax/BlogHexo)
 - [Hexo](https://hexo.io/)
 - [NexT](https://github.com/theme-next/hexo-theme-next)
 - [Cloudflare](https://www.cloudflare.com)
