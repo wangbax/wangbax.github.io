@@ -35,9 +35,8 @@
 .code-toolbar button{font-family:"PingFang SC",sans-serif;font-size:11px;letter-spacing:0;background:#f9f5ee;color:#82664f;border:1px solid #dfd0bf;padding:5px 10px;border-radius:4px;min-width:68px}
 .code-toolbar button:hover{border-color:#a17c5c;color:#735039}.article-body .highlight>table{display:block;width:100%;overflow-x:auto;margin:0;max-width:100%;font-size:12px;line-height:1.85}
 .article-body .highlight tbody{display:table;width:100%}.article-body .highlight td{border:0;padding:16px 18px;vertical-align:top}.article-body .highlight pre{margin:0;font:inherit;font-family:"PT Mono","Menlo",monospace;white-space:pre;overflow-wrap:normal;word-break:normal;tab-size:4}
-.article-body .highlight .gutter{color:#73695e;border-right:1px solid #e5d9c9;user-select:none;padding-right:13px}
-.highlight .keyword,.highlight .selector-tag,.highlight .built_in{color:#8f6147}.highlight .string,.highlight .attr{color:#7b6842}.highlight .title,.highlight .function{color:#756079}.highlight .number,.highlight .literal{color:#8e633e}
-.highlight .comment,.highlight .quote{color:#776857;font-style:italic}.highlight .meta{color:#8b7865}.highlight .params{color:#746250}.highlight .line{color:inherit}
+.highlight .keyword,.highlight .selector-tag,.highlight .built_in{color:#8f6147}.highlight .string,.highlight .attr{color:#7b6842}.highlight .title,.highlight .function{color:#756079}.highlight .number{color:#8e633e}
+.highlight .comment{color:#776857;font-style:italic}
 .reading-aside{align-self:stretch;min-width:0}.toc-sticky{position:sticky;top:116px;padding-top:4px;max-height:calc(100dvh - 145px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#ceb295 transparent}.toc-heading{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:1px;color:#8c735b;margin:0 0 17px;padding-bottom:15px;border-bottom:1px solid var(--line)}
 .toc-heading span{font:9px "PT Mono",monospace;letter-spacing:0;color:#ab947e}.toc-list{list-style:none;margin:0;padding:0;border-left:1px solid #e3d8c9}
 .toc-list li{margin:0}.toc-list a{display:block;font-size:11px;line-height:1.7;color:#816e5b;padding:7px 0 7px 15px;border-left:2px solid transparent;margin-left:-1px;overflow-wrap:anywhere}

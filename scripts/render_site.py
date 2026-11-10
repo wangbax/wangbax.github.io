@@ -187,9 +187,9 @@ def projects():
     ) + "</div>"
 
 
-def note(post, title=None):
+def note(post):
     category = post["category"]
-    return f'''<a class="note" href="{e(post['url'])}"><time datetime="{e(post['published'][:10])}">{post['published'][:10].replace('-', '.')}</time><h3>{e(title or post['title'])}</h3><span class="category">{e(category)}</span>{ARROW}</a>'''
+    return f'''<a class="note" href="{e(post['url'])}"><time datetime="{e(post['published'][:10])}">{post['published'][:10].replace('-', '.')}</time><h3>{e(post['title'])}</h3><span class="category">{e(category)}</span>{ARROW}</a>'''
 
 
 def home_page():

@@ -16,7 +16,6 @@ from render_site import PAGES, build_site
 
 ASSET_DIRECTORIES = {"images", "js"}
 GENERATED_FILES = set(PAGES) | {"css/app.css", "search.json"}
-SOURCE_ASSETS = {"css/site.css", "css/pages.css", "css/theme.css", "js/theme.js"}
 
 
 def main():
@@ -45,7 +44,7 @@ def main():
     names = GENERATED_FILES | {name.decode("utf-8") for name in tracked.split(bytes([0])) if name}
     selected = []
     for name in sorted(names):
-        if name in SOURCE_ASSETS:
+        if name == "js/theme.js":
             continue
         relative = Path(name)
         if relative.parts[0] not in ASSET_DIRECTORIES and name not in GENERATED_FILES:

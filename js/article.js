@@ -21,8 +21,7 @@
     button.setAttribute('aria-live', 'polite');
     let reset;
     button.addEventListener('click', async () => {
-      const lines = pre.querySelectorAll('.line');
-      const code = lines.length ? Array.from(lines, line => line.textContent).join('\n') : pre.innerText;
+      const code = pre.innerText;
       clearTimeout(reset);
       try {
         await navigator.clipboard.writeText(code);
