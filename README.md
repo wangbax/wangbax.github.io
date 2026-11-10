@@ -1,9 +1,7 @@
 # wangbax.github.io
 
-wangbax 的个人博客，记录 Android、PHP 与开发工具相关的实践和学习笔记。
+wangbax 的个人网站，收录小项目、开发手记和学习记录。
 
-[访问博客](https://www.wangbaxai.top) · [关于我](https://www.wangbaxai.top/about/) · [GitHub](https://github.com/wangbax)
+[访问网站](https://www.wangbaxai.top) · [文章](https://www.wangbaxai.top/archives/) · [关于我](https://www.wangbaxai.top/about/) · [GitHub](https://github.com/wangbax)
 
-博客源码：[BlogHexo](https://github.com/wangbax/BlogHexo)。
-
-由 [Hexo](https://hexo.io/) 和 [NexT](https://theme-next.js.org/) 构建。
+早期文章原稿：[BlogHexo](https://github.com/wangbax/BlogHexo)。
