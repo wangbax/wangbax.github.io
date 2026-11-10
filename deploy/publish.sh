@@ -49,6 +49,8 @@ test -f "${release_dir}/js/planet.js"
 test -f "${release_dir}/search.xml"
 find "$release_dir" -type d -exec chmod 755 {} +
 find "$release_dir" -type f -exec chmod 644 {} +
+# Refresh HTTP validators even when deterministic files keep the same size.
+find "$release_dir" -type f -exec touch {} +
 if command -v restorecon >/dev/null 2>&1; then
     restorecon -RF "$site_base"
 fi
