@@ -30,7 +30,7 @@ def remote(instance, region, command):
 
 def verify_site(origin, expected_index):
     checks = [("/healthz", 200, b"ok"), ("/", 200, expected_index),
-              ("/css/site.css", 200, None), ("/css/pages.css", 200, None),
+              ("/css/site.css", 200, None), ("/css/pages.css", 200, None), ("/css/theme.css", 200, None), ("/js/theme.js", 200, None),
               ("/js/site.js", 200, None), ("/js/planet.js", 200, None), ("/search.xml", 200, None),
               ("/does-not-exist", 404, None), ("/.git/config", 403, None)]
     for path, status, expected in checks:

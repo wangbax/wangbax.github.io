@@ -21,6 +21,21 @@ PAGES = json.loads((CONTENT / "pages.json").read_text())
 POST_BY_URL = {post["url"]: post for post in POSTS}
 ARROW = '<span class="arrow" aria-hidden="true">↗</span>'
 SEARCH_ICON = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.5 4.5"/></svg>'
+THEME_ICONS = {
+    "light": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',
+    "dark": '<path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/>',
+    "system": '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/>',
+}
+
+
+def theme_picker():
+    icons = {mode: f'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">{paths}</svg>' for mode, paths in THEME_ICONS.items()}
+    trigger = "".join(f'<span data-theme-icon="{mode}">{icon}</span>' for mode, icon in icons.items())
+    options = "".join(
+        f'<button type="button" data-theme-option="{mode}" aria-pressed="{str(mode == "system").lower()}">{icons[mode]}<span>{label}</span><span class="theme-check" aria-hidden="true">✓</span></button>'
+        for mode, label in [("light", "明亮模式"), ("dark", "夜间模式"), ("system", "跟随系统")]
+    )
+    return f'<details class="theme-picker" data-theme-picker><summary aria-label="外观模式：跟随系统" title="外观模式：跟随系统">{trigger}</summary><div class="theme-options" role="group" aria-label="外观模式">{options}</div></details>'
 
 
 def e(value):
@@ -66,7 +81,7 @@ def header(active=""):
     return f'''<a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="wrap top">
   <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="{e(SITE['avatar'])}" width="29" height="29" alt="">wangbax</a>
-  <nav class="nav" aria-label="主导航">{nav}<button class="search-trigger" type="button" data-open-search aria-label="搜索文章">{SEARCH_ICON}</button><a class="github desktop" href="{e(SITE['github'])}" target="_blank" rel="noopener">GitHub ↗</a></nav>
+  <nav class="nav" aria-label="主导航">{nav}<button class="search-trigger" type="button" data-open-search aria-label="搜索文章">{SEARCH_ICON}</button>{theme_picker()}<a class="github desktop" href="{e(SITE['github'])}" target="_blank" rel="noopener">GitHub ↗</a></nav>
 </div></header>'''
 
 
@@ -104,11 +119,12 @@ def document(title, url, body, active="", description=None, post=None, home=Fals
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#faf7f1"><title>{e(page_title)}</title>
+<script src="{asset('/js/theme.js')}"></script>
 <meta name="description" content="{e(description)}"><meta name="author" content="wangbax">
 <link rel="canonical" href="{e(canonical)}"><link rel="icon" type="image/png" href="{e(SITE['avatar'])}">
 <meta property="og:type" content="{'article' if post else 'website'}"><meta property="og:site_name" content="wangbax"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(description)}"><meta property="og:url" content="{e(canonical)}"><meta property="og:image" content="{e(SITE['origin'] + SITE['avatar'])}">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="{e(title)}"><meta name="twitter:description" content="{e(description)}">{article_meta}
-<link rel="stylesheet" href="{asset('/css/site.css')}"><link rel="stylesheet" href="{asset('/css/pages.css')}">{scripts}
+<link rel="stylesheet" href="{asset('/css/site.css')}"><link rel="stylesheet" href="{asset('/css/pages.css')}"><link rel="stylesheet" href="{asset('/css/theme.css')}">{scripts}
 </head><body class="{'home-page' if home else 'reading-page' if post else 'collection-page'}">
 {header(active)}{body}{footer()}{search_dialog()}
 </body></html>
