@@ -15,26 +15,6 @@
       "url": "https://github.com/wangbax/radius-shape-view"
     }
   ],
-  "notes": [
-    {
-      "title": "颜色透明度",
-      "date": "2017.08.17",
-      "category": "开发笔记",
-      "url": "/2017/08/17/wt-alpha/"
-    },
-    {
-      "title": "Android 重写 InputConnection 之后，某些设备 Crash",
-      "date": "2017.04.24",
-      "category": "Android",
-      "url": "/2017/04/24/wt-android-inputconnection/"
-    },
-    {
-      "title": "PHP 开发环境搭建",
-      "date": "2017.04.19",
-      "category": "PHP",
-      "url": "/2017/04/19/wt-php-develop-env/"
-    }
-  ],
   "origin": "https://www.wangbaxai.top",
   "avatar": "/images/avatar.png",
   "copyright_year": 2026,

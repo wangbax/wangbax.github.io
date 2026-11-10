@@ -10,7 +10,7 @@ function loadSearchIndex() {
     .then(entries => {
       if (!Array.isArray(entries)) throw new Error('Invalid search index');
       return entries.filter(entry => typeof entry.title === 'string' && typeof entry.content === 'string'
-        && typeof entry.url === 'string' && /^\/20\d{2}\/\d{2}\/\d{2}\/[^/]+\/$/.test(entry.url));
+        && typeof entry.url === 'string' && /^\/\d{4}\/\d{2}\/\d{2}\/[^/]+\/$/.test(entry.url));
     })
     .catch(error => {
       searchIndexPromise = undefined;

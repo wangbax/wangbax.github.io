@@ -52,7 +52,7 @@
 <meta property="og:type" content="article"><meta property="og:site_name" content="wangbax"><meta property="og:title" content="Android 收藏方法"><meta property="og:description" content="保存平时收集到的常用方法，以便以后调用。"><meta property="og:url" content="https://www.wangbaxai.top/2016/08/08/wt-android-methods/"><meta property="og:image" content="https://www.wangbaxai.top/images/avatar.png">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="Android 收藏方法"><meta name="twitter:description" content="保存平时收集到的常用方法，以便以后调用。"><meta property="article:published_time" content="2016-08-08T11:49:29+08:00"><meta property="article:modified_time" content="2016-08-15T16:31:27+08:00">
 <link rel="stylesheet" href="/css/app.css?v=61b908872ac5"><script src="/js/site.js?v=1059b6693d8c" defer></script><script src="/js/article.js?v=9bbefee4c352" defer></script>
-</head><body class="reading-page" data-search-module="/js/search.js?v=0b2beb899a01" data-search-index="/search.json?v=ece0bfddf346">
+</head><body class="reading-page" data-search-module="/js/search.js?v=35667f834fd9" data-search-index="/search.json?v=76f0873e267a">
 <a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="wrap top">
   <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="29px" width="29" height="29" alt="" loading="eager" decoding="async" fetchpriority="high">wangbax</a>
@@ -60,8 +60,10 @@
 </div></header><div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>
 <main id="main" class="wrap article-main">
 <header class="article-hero"><div class="breadcrumb"><a href="/archives/">← 开发手记</a><span class="breadcrumb-separator" aria-hidden="true">/</span><span>Android</span></div><h1>Android 收藏方法</h1><div class="article-meta"><a class="article-author" href="/about/"><img class="author-avatar" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="30px" width="30" height="30" alt="" loading="eager" decoding="async" fetchpriority="auto"><span>wangbax</span></a><time datetime="2016-08-08T11:49:29+08:00">2016-08-08</time><span>约 5 分钟</span><span class="article-updated">更新于 2016-08-15</span></div><svg class="article-sigil" viewBox="0 0 160 160" fill="none" aria-hidden="true"><circle cx="80" cy="80" r="44"/><ellipse cx="80" cy="80" rx="71" ry="22" transform="rotate(-30 80 80)"/><ellipse cx="80" cy="80" rx="63" ry="30" transform="rotate(34 80 80)"/><circle cx="133" cy="50" r="3" fill="currentColor"/></svg></header>
-<div class="reading-layout"><article class="article-column" aria-label="Android 收藏方法"><details class="mobile-toc"><summary>本文目录 <span aria-hidden="true">＋</span></summary><nav aria-label="手机文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-0"><a href="#%E7%9B%AE%E5%BD%95">目录</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E6%89%8B%E6%9C%BA%E9%AA%8C%E8%AF%81%E7%A0%81">获取手机验证码</a></li><li class="toc-level-2"><a href="#%E5%9B%BE%E7%89%87%E6%97%8B%E8%BD%AC">图片旋转</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%89%80%E6%9C%89%E7%9A%84%E5%AD%98%E5%82%A8%E8%B7%AF%E5%BE%84">获取设备所有的存储路径</a></li><li class="toc-level-2"><a href="#%E6%96%B9%E6%B3%951">方法1</a></li><li class="toc-level-2"><a href="#%E6%96%B9%E6%B3%952">方法2</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E5%BA%94%E7%94%A8%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF">获取应用进程信息</a></li><li class="toc-level-2"><a href="#%E9%83%A8%E5%88%86%E4%BB%A3%E7%A0%81%E5%B1%95%E7%A4%BA">部分代码展示</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E5%B7%B2%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%A4%A7%E5%B0%8F">获取已安装软件的大小</a></li><li class="toc-level-1"><a href="#%E7%94%9F%E6%88%90%E5%B8%A6%E5%80%92%E5%BD%B1%E7%9A%84Bitmap%E5%9B%BE%E5%83%8F">生成带倒影的Bitmap图像</a></li><li class="toc-level-1"><a href="#ImageLoader%E5%8A%A0%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87%E5%B7%A5%E5%85%B7%E7%B1%BB">ImageLoader加载本地图片工具类</a></li></ol></nav></details><div class="article-body" id="article-body"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>保存平时收集到的常用方法，以便以后调用。</p>
-<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<div class="reading-layout"><article class="article-column" aria-label="Android 收藏方法"><details class="mobile-toc"><summary>本文目录 <span aria-hidden="true">＋</span></summary><nav aria-label="手机文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-0"><a href="#%E7%9B%AE%E5%BD%95">目录</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E6%89%8B%E6%9C%BA%E9%AA%8C%E8%AF%81%E7%A0%81">获取手机验证码</a></li><li class="toc-level-2"><a href="#%E5%9B%BE%E7%89%87%E6%97%8B%E8%BD%AC">图片旋转</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%89%80%E6%9C%89%E7%9A%84%E5%AD%98%E5%82%A8%E8%B7%AF%E5%BE%84">获取设备所有的存储路径</a></li><li class="toc-level-2"><a href="#%E6%96%B9%E6%B3%951">方法1</a></li><li class="toc-level-2"><a href="#%E6%96%B9%E6%B3%952">方法2</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E5%BA%94%E7%94%A8%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF">获取应用进程信息</a></li><li class="toc-level-2"><a href="#%E9%83%A8%E5%88%86%E4%BB%A3%E7%A0%81%E5%B1%95%E7%A4%BA">部分代码展示</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E5%B7%B2%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%A4%A7%E5%B0%8F">获取已安装软件的大小</a></li><li class="toc-level-1"><a href="#%E7%94%9F%E6%88%90%E5%B8%A6%E5%80%92%E5%BD%B1%E7%9A%84Bitmap%E5%9B%BE%E5%83%8F">生成带倒影的Bitmap图像</a></li><li class="toc-level-1"><a href="#ImageLoader%E5%8A%A0%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87%E5%B7%A5%E5%85%B7%E7%B1%BB">ImageLoader加载本地图片工具类</a></li></ol></nav></details><div class="article-body" id="article-body"><h2 id="简介"><a class="headerlink" href="#简介" title="链接到此段落"></a>简介</h2>
+<p>保存平时收集到的常用方法，以便以后调用。</p>
+<h2 id="目录"><a class="headerlink" href="#目录" title="链接到此段落"></a>目录</h2>
+<ul>
 <li><a href="#markdown-smsobserver">获取手机验证码</a></li>
 <li><a href="#markdown-rotateBitmap">图片旋转</a></li>
 <li><a href="#markdown-getStoragePaths">获取设备所有的存储路径</a></li>
@@ -70,18 +72,315 @@
 <li><a href="#markdown-createReflectedImage">生成带倒影的Bitmap图像</a></li>
 <li><a href="#markdown-imageloaderlocal">ImageLoader加载本地图片工具类</a></li>
 </ul>
-<a id="more"></a>
-<h3 id="获取手机验证码"><a href="#获取手机验证码" class="headerlink" title="获取手机验证码"></a><a name="markdown-smsobserver"></a>获取手机验证码</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">SmsObservermSObserver = <span class="keyword">new</span> SmsObserver(mContext, <span class="keyword">new</span> Handler());  </span><br><span class="line">mContext.getContentResolver().registerContentObserver(SMS_INBOX, <span class="keyword">true</span>, mSObserver);  </span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Uri SMS_INBOX = Uri.parse(<span class="string">"content://sms/"</span>);  </span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">SmsObserver</span> <span class="keyword">extends</span> <span class="title">ContentObserver</span> </span>&#123;  </span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Cursor cursor = <span class="keyword">null</span>;  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">SmsObserver</span><span class="params">(Context context, Handler handler)</span> </span>&#123;  </span><br><span class="line">	<span class="keyword">super</span>(handler);  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span>  </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChange</span><span class="params">(<span class="keyword">boolean</span> selfChange)</span> </span>&#123;  </span><br><span class="line">	<span class="keyword">super</span>.onChange(selfChange);  </span><br><span class="line">	getSmsFromPhone();  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getSmsFromPhone</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">	ContentResolver cr = mContext.getContentResolver();  </span><br><span class="line">	String[] projection = <span class="keyword">new</span> String[] &#123; <span class="string">"body"</span> &#125;;  </span><br><span class="line">	<span class="comment">// 10655198881  </span></span><br><span class="line">	String where = <span class="string">" address = '10655198881' AND date &gt;  "</span> + (System.currentTimeMillis() - <span class="number">1</span> * <span class="number">60</span> * <span class="number">1000</span>);  </span><br><span class="line">	Cursor cur = cr.query(SMS_INBOX, projection, where, <span class="keyword">null</span>, <span class="string">"date desc"</span>);  </span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">null</span> == cur)  </span><br><span class="line">		<span class="keyword">return</span>;  </span><br><span class="line">	<span class="keyword">if</span> (cur.moveToNext()) &#123;  </span><br><span class="line">		String body = cur.getString(cur.getColumnIndex(<span class="string">"body"</span>));  </span><br><span class="line">		Pattern pattern = Pattern.compile(<span class="string">"[0-9]&#123;6&#125;"</span>);  </span><br><span class="line">		Matcher matcher = pattern.matcher(body);  </span><br><span class="line">		<span class="keyword">if</span> (matcher.find()) &#123;  </span><br><span class="line">			String res = matcher.group().substring(<span class="number">1</span>, <span class="number">7</span>); </span><br><span class="line">			<span class="comment">//设置code </span></span><br><span class="line">			mCodeEdit.setText(res);  </span><br><span class="line">			<span class="keyword">return</span>;  </span><br><span class="line">			&#125;  </span><br><span class="line">		&#125;  </span><br><span class="line">	&#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="图片旋转"><a href="#图片旋转" class="headerlink" title="图片旋转"></a><a name="markdown-rotateBitmap"></a>图片旋转</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">rotateBitmap</span><span class="params">(<span class="keyword">int</span> degree, Bitmap bitmap)</span> </span>&#123;</span><br><span class="line">  	Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">  	matrix.postRotate(degree);</span><br><span class="line">  	</span><br><span class="line">	<span class="keyword">return</span> Bitmap.createBitmap(bitmap, <span class="number">0</span>, <span class="number">0</span>, bitmap.getWidth(), bitmap.getHeight(), matrix, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="获取设备所有的存储路径"><a href="#获取设备所有的存储路径" class="headerlink" title="获取设备所有的存储路径"></a><a name="markdown-getStoragePaths"></a>获取设备所有的存储路径</h3><p>有2种方法，方法1为调用系统方法getVolumePaths获取，方法2为自己解析/proc/mounts文件下的路径</p>
-<h4 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String[] getVolumePaths(Context context) &#123;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		StorageManager sm = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);</span><br><span class="line">		String[] paths = (String[]) StorageManager.class.getMethod(<span class="string">"getVolumePaths"</span>).invoke(sm);</span><br><span class="line">		List&lt;String&gt; ps = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">		<span class="keyword">for</span> (String path : paths) &#123;</span><br><span class="line">			String status = (String) StorageManager.class.getMethod(<span class="string">"getVolumeState"</span>, String.class).invoke(sm, path);</span><br><span class="line">			<span class="keyword">if</span> (status.equals(android.os.Environment.MEDIA_MOUNTED)) &#123;</span><br><span class="line">				ps.add(path);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ps.toArray(<span class="keyword">new</span> String[ps.size()]);</span><br><span class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String[] getExternalStoragePaths() &#123;</span><br><span class="line">	BufferedReader in = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		in = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(<span class="string">"/proc/mounts"</span>)));</span><br><span class="line">		List&lt;String&gt; ps = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">for</span> (String l; (l = in.readLine()) != <span class="keyword">null</span>; ) &#123;</span><br><span class="line">				<span class="keyword">if</span> (contains(l, KW_BLACK) || !contains(l, KW_WHITE)) &#123;</span><br><span class="line">					<span class="keyword">continue</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">				String[] elements = l.split(<span class="string">" "</span>);</span><br><span class="line">				<span class="keyword">if</span> (elements.length &gt; <span class="number">1</span> &amp;&amp; elements[<span class="number">1</span>] != <span class="keyword">null</span>) &#123;</span><br><span class="line">					ps.add(elements[<span class="number">1</span>]);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ps.toArray(<span class="keyword">new</span> String[ps.size()]);</span><br><span class="line">	&#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (in != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			in.close();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(String src, String[] kws)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (src != <span class="keyword">null</span> &amp;&amp; kws != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">for</span> (String kw : kws) &#123;</span><br><span class="line">			<span class="keyword">if</span> (src.contains(kw)) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] KW_BLACK = &#123;</span><br><span class="line">           <span class="string">"secure"</span>,</span><br><span class="line">           <span class="string">"asec"</span>,</span><br><span class="line">           <span class="string">"legacy"</span>,</span><br><span class="line">           <span class="string">"shell"</span>,</span><br><span class="line">           <span class="string">"private"</span>,</span><br><span class="line">           <span class="string">"obb"</span>,</span><br><span class="line">           <span class="string">"media"</span>,</span><br><span class="line">           <span class="string">"smb"</span>,</span><br><span class="line">           <span class="string">"Bootloader"</span>,</span><br><span class="line">           <span class="string">"Reserve"</span>,</span><br><span class="line">           <span class="string">"on"</span>,</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] KW_WHITE = &#123;</span><br><span class="line">           <span class="string">"fat"</span>,</span><br><span class="line">   &#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="获取应用进程信息"><a href="#获取应用进程信息" class="headerlink" title="获取应用进程信息"></a><a name="markdown-getRunningAppProcesses"></a>获取应用进程信息</h3><p>根据系统提供的方法<code>ActivityManager.getRunningAppProcesses</code>可以获取到，但是在<code>API &gt;= 22</code>的设备上获取的信息是不完整的，此时可以通过获取<code>/proc</code>下文件夹进行比对（在开启应用时，在此路径下都会加载一个文件夹用于保存进程信息）,方法来源于<a href="https://github.com/jaredrummler/AndroidProcesses/blob/master/library/src/main/java/com/jaredrummler/android/processes/ProcessManager.java" target="_blank" rel="noopener">GitHub</a>。</p>
-<h4 id="部分代码展示"><a href="#部分代码展示" class="headerlink" title="部分代码展示"></a>部分代码展示</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;AndroidAppProcess&gt; <span class="title">getRunningForegroundApps</span><span class="params">(Context ctx)</span> </span>&#123;</span><br><span class="line">	List&lt;AndroidAppProcess&gt; processes = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">	File[] files = <span class="keyword">new</span> File(<span class="string">"/proc"</span>).listFiles();</span><br><span class="line">	PackageManager pm = ctx.getPackageManager();</span><br><span class="line">	<span class="keyword">for</span> (File file : files) &#123;</span><br><span class="line">		<span class="keyword">if</span> (file.isDirectory()) &#123;</span><br><span class="line">			<span class="keyword">int</span> pid;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				pid = Integer.parseInt(file.getName());</span><br><span class="line">			&#125; <span class="keyword">catch</span> (NumberFormatException e) &#123;</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				AndroidAppProcess process = <span class="keyword">new</span> AndroidAppProcess(pid);</span><br><span class="line">				<span class="keyword">if</span> (process.foreground</span><br><span class="line">					<span class="comment">// ignore system processes. First app user starts at 10000.</span></span><br><span class="line">					&amp;&amp; (process.uid &lt; <span class="number">1000</span> || process.uid &gt; <span class="number">9999</span>)</span><br><span class="line">					<span class="comment">// ignore processes that are not running in the default app process.</span></span><br><span class="line">					&amp;&amp; !process.name.contains(<span class="string">":"</span>)</span><br><span class="line">					<span class="comment">// Ignore processes that the user cannot launch.</span></span><br><span class="line">					&amp;&amp; pm.getLaunchIntentForPackage(process.getPackageName()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">						processes.add(process);</span><br><span class="line">					&#125;</span><br><span class="line">			&#125; <span class="keyword">catch</span> (AndroidAppProcess.NotAndroidAppProcessException ignored) &#123;</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				log(e, <span class="string">"Error reading from /proc/%d."</span>, pid);</span><br><span class="line">				<span class="comment">// System apps will not be readable on Android 5.0+ if SELinux is enforcing.</span></span><br><span class="line">				<span class="comment">// You will need root access or an elevated SELinux context to read all files under /proc.</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> processes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="获取已安装软件的大小"><a href="#获取已安装软件的大小" class="headerlink" title="获取已安装软件的大小"></a><a name="markdown-queryPacakgeSize"></a>获取已安装软件的大小</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">queryPacakgeSize</span><span class="params">(AppInfo info)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (info != <span class="keyword">null</span> &amp;&amp; info.packageName != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="comment">// 使用放射机制得到PackageManager类的隐藏函数getPackageSizeInfo</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">int</span> sdkcode = getAndroidSDKVersion();</span><br><span class="line">			<span class="keyword">if</span> (sdkcode &gt; <span class="number">16</span>) &#123;</span><br><span class="line">				Method getPackageSizeInfo = mPackageManager.getClass()</span><br><span class="line">                           .getDeclaredMethod(<span class="string">"getPackageSizeInfo"</span>,</span><br><span class="line">                                   String.class, <span class="keyword">int</span>.class,</span><br><span class="line">                                   IPackageStatsObserver.class);</span><br><span class="line">               <span class="comment">// 调用该函数，并且给其分配参数 ，待调用流程完成后会回调PkgSizeObserver类的函数</span></span><br><span class="line">               getPackageSizeInfo.invoke(mPackageManager,</span><br><span class="line">                           info.packageName,</span><br><span class="line">                           android.os.Process.myUid() / <span class="number">100000</span>,</span><br><span class="line">                           <span class="keyword">new</span> PkgSizeObserver(info));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            		<span class="comment">// 通过反射机制获得该隐藏函数</span></span><br><span class="line">            		Method getPackageSizeInfo = mPackageManager.getClass()</span><br><span class="line">                           .getDeclaredMethod(<span class="string">"getPackageSizeInfo"</span>,</span><br><span class="line">                                   String.class, IPackageStatsObserver.class);</span><br><span class="line">                <span class="comment">// 调用该函数，并且给其分配参数 ，待调用流程完成后会回调PkgSizeObserver类的函数</span></span><br><span class="line">                getPackageSizeInfo.invoke(mPackageManager,</span><br><span class="line">                           info.packageName, <span class="keyword">new</span> PkgSizeObserver(info));</span><br><span class="line">           &#125;</span><br><span class="line">         &#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">         	ex.printStackTrace();</span><br><span class="line">         	<span class="keyword">throw</span> ex; <span class="comment">// 抛出异常</span></span><br><span class="line">         &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="生成带倒影的Bitmap图像"><a href="#生成带倒影的Bitmap图像" class="headerlink" title="生成带倒影的Bitmap图像"></a><a name="markdown-createReflectedImage"></a>生成带倒影的Bitmap图像</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">createReflectedImage</span><span class="params">(Bitmap originalImage,</span></span></span><br><span class="line"><span class="function"><span class="params">                                          <span class="keyword">float</span> reflectionHeightScale, <span class="keyword">int</span> width, <span class="keyword">int</span> height, <span class="keyword">int</span> space)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> == originalImage) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"src can not be null"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (reflectionHeightScale &lt;= <span class="number">0</span> || reflectionHeightScale &gt; <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(</span><br><span class="line">                <span class="string">"reflectionHeightScale must be during 0 ~ 1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> reflectionHeight = (<span class="keyword">int</span>) (height * reflectionHeightScale);</span><br><span class="line"></span><br><span class="line">    Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">    <span class="comment">// 实现图片翻转90度</span></span><br><span class="line">    matrix.preScale(<span class="number">1</span>, -<span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 创建倒影图片</span></span><br><span class="line">    Bitmap reflectionImage = Bitmap.createBitmap(originalImage, <span class="number">0</span>, height</span><br><span class="line">            - reflectionHeight, width, reflectionHeight, matrix, <span class="keyword">false</span>);</span><br><span class="line">    <span class="comment">// 创建总图片（原图片 + 倒影图片）</span></span><br><span class="line">    Bitmap finalReflection = Bitmap.createBitmap(width,</span><br><span class="line">            (height + reflectionHeight) + space, Config.ARGB_8888);</span><br><span class="line">    <span class="comment">// 创建画布</span></span><br><span class="line">    Canvas canvas = <span class="keyword">new</span> Canvas(finalReflection);</span><br><span class="line">    canvas.drawBitmap(originalImage, <span class="number">0</span>, <span class="number">0</span>, <span class="keyword">null</span>);</span><br><span class="line">    <span class="comment">// 把倒影图片画到画布上</span></span><br><span class="line">    canvas.drawBitmap(reflectionImage, <span class="number">0</span>, height + <span class="number">1</span> + space, <span class="keyword">null</span>);</span><br><span class="line">    Paint shaderPaint = <span class="keyword">new</span> Paint();</span><br><span class="line">    <span class="comment">// 创建线性渐变LinearGradient对象</span></span><br><span class="line">    LinearGradient shader = <span class="keyword">new</span> LinearGradient(<span class="number">0</span>,</span><br><span class="line">            originalImage.getHeight(), <span class="number">0</span>, finalReflection.getHeight() + <span class="number">1</span>,</span><br><span class="line">            <span class="number">0x70ffffff</span>, <span class="number">0x00ffffff</span>, TileMode.MIRROR);</span><br><span class="line">    shaderPaint.setShader(shader);</span><br><span class="line">    shaderPaint.setXfermode(<span class="keyword">new</span> PorterDuffXfermode(Mode.DST_IN));</span><br><span class="line">    <span class="comment">// 画布画出反转图片大小区域，然后把渐变效果加到其中，就出现了图片的倒影效果。</span></span><br><span class="line">    canvas.drawRect(<span class="number">0</span>, height + <span class="number">1</span>, width, finalReflection.getHeight(),</span><br><span class="line">            shaderPaint);</span><br><span class="line">    <span class="keyword">return</span> finalReflection;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="ImageLoader加载本地图片工具类"><a href="#ImageLoader加载本地图片工具类" class="headerlink" title="ImageLoader加载本地图片工具类"></a><a name="markdown-imageloaderlocal"></a>ImageLoader加载本地图片工具类</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> android.widget.ImageView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.nostra13.universalimageloader.core.ImageLoader;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 异步加载本地图片工具类</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> tony</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoadLocalImageUtil</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">LoadLocalImageUtil</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> LoadLocalImageUtil instance = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> LoadLocalImageUtil <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> LoadLocalImageUtil();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从内存卡中异步加载本地图片</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> uri</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> imageView</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayFromSDCard</span><span class="params">(String uri, ImageView imageView)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// String imageUri = "file:///mnt/sdcard/image.png"; // from SD card</span></span><br><span class="line">        ImageLoader.getInstance().displayImage(<span class="string">"file://"</span> + uri, imageView);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从assets文件夹中异步加载图片</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> imageName</span></span><br><span class="line"><span class="comment">     *            图片名称，带后缀的，例如：1.png</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> imageView</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dispalyFromAssets</span><span class="params">(String imageName, ImageView imageView)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// String imageUri = "assets://image.png"; // from assets</span></span><br><span class="line">        ImageLoader.getInstance().displayImage(<span class="string">"assets://"</span> + imageName,</span><br><span class="line">                imageView);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从drawable中异步加载本地图片</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> imageId</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> imageView</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayFromDrawable</span><span class="params">(<span class="keyword">int</span> imageId, ImageView imageView)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// String imageUri = "drawable://" + R.drawable.image; // from drawables</span></span><br><span class="line">        <span class="comment">// (only images, non-9patch)</span></span><br><span class="line">        ImageLoader.getInstance().displayImage(<span class="string">"drawable://"</span> + imageId,</span><br><span class="line">                imageView);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从内容提提供者中抓取图片</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayFromContent</span><span class="params">(String uri, ImageView imageView)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// String imageUri = "content://media/external/audio/albumart/13"; //</span></span><br><span class="line">        <span class="comment">// from content provider</span></span><br><span class="line">        ImageLoader.getInstance().displayImage(<span class="string">"content://"</span> + uri, imageView);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</div><footer class="article-footer"><a class="back-to-notes" href="/archives/">← 返回全部文章</a></footer><nav class="neighbor-notes" aria-label="相邻文章"><a href="/2016/08/03/wt-center-image-span/"><span>上一篇</span><strong>Android TextView头尾展示标签图片，并且尾部标签不被挤出</strong><span class="arrow" aria-hidden="true">↗</span></a><a href="/2016/08/15/wt-android-intent-market/"><span>下一篇</span><strong>Android 系统评分的调用及自定义</strong><span class="arrow" aria-hidden="true">↗</span></a></nav></article><aside class="reading-aside" aria-label="文章导航"><div class="toc-sticky"><p class="toc-heading">本文目录 <span data-reading-percent>0%</span></p><nav aria-label="桌面文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-0"><a href="#%E7%9B%AE%E5%BD%95">目录</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E6%89%8B%E6%9C%BA%E9%AA%8C%E8%AF%81%E7%A0%81">获取手机验证码</a></li><li class="toc-level-2"><a href="#%E5%9B%BE%E7%89%87%E6%97%8B%E8%BD%AC">图片旋转</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%89%80%E6%9C%89%E7%9A%84%E5%AD%98%E5%82%A8%E8%B7%AF%E5%BE%84">获取设备所有的存储路径</a></li><li class="toc-level-2"><a href="#%E6%96%B9%E6%B3%951">方法1</a></li><li class="toc-level-2"><a href="#%E6%96%B9%E6%B3%952">方法2</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E5%BA%94%E7%94%A8%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF">获取应用进程信息</a></li><li class="toc-level-2"><a href="#%E9%83%A8%E5%88%86%E4%BB%A3%E7%A0%81%E5%B1%95%E7%A4%BA">部分代码展示</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E5%B7%B2%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%A4%A7%E5%B0%8F">获取已安装软件的大小</a></li><li class="toc-level-1"><a href="#%E7%94%9F%E6%88%90%E5%B8%A6%E5%80%92%E5%BD%B1%E7%9A%84Bitmap%E5%9B%BE%E5%83%8F">生成带倒影的Bitmap图像</a></li><li class="toc-level-1"><a href="#ImageLoader%E5%8A%A0%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87%E5%B7%A5%E5%85%B7%E7%B1%BB">ImageLoader加载本地图片工具类</a></li></ol></nav><div class="toc-bottom"><a href="#main">回到顶部 ↑</a><span>慢慢读，也慢慢想。</span></div></div></aside></div>
+<p><a id="more"></a></p>
+<h3 id="获取手机验证码"><a class="headerlink" href="#获取手机验证码" title="链接到此段落"></a><a id="markdown-smsobserver"></a>获取手机验证码</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre>SmsObservermSObserver = <span class="keyword">new</span> SmsObserver(mContext, <span class="keyword">new</span> Handler());
+mContext.<span class="attr">getContentResolver</span>().<span class="attr">registerContentObserver</span>(SMS_INBOX, <span class="keyword">true</span>, mSObserver);
+
+<span class="keyword">private</span> Uri SMS_INBOX = Uri.<span class="attr">parse</span>(<span class="string">&quot;</span><span class="string">content://sms/</span><span class="string">&quot;</span>);
+<span class="keyword">private</span> <span class="keyword">class</span> <span class="title">SmsObserver</span> <span class="keyword">extends</span> ContentObserver {
+
+<span class="keyword">private</span> Cursor cursor = <span class="keyword">null</span>;
+
+<span class="keyword">public</span> <span class="function">SmsObserver</span>(Context context, Handler handler) {
+    <span class="keyword">super</span>(handler);
+}
+
+@Override
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="function">onChange</span>(<span class="keyword">boolean</span> selfChange) {
+    <span class="keyword">super</span>.<span class="attr">onChange</span>(selfChange);
+    getSmsFromPhone();
+}
+
+<span class="keyword">private</span> <span class="keyword">void</span> <span class="function">getSmsFromPhone</span>() {
+    ContentResolver cr = mContext.<span class="attr">getContentResolver</span>();
+    String[] projection = <span class="keyword">new</span> String[] { <span class="string">&quot;</span><span class="string">body</span><span class="string">&quot;</span> };
+    <span class="comment">// 10655198881</span>
+    String where = <span class="string">&quot;</span><span class="string"> address = &#x27;10655198881&#x27; AND date &gt;  </span><span class="string">&quot;</span> + (System.<span class="attr">currentTimeMillis</span>() - <span class="number">1</span> * <span class="number">60</span> * <span class="number">1000</span>);
+    Cursor cur = cr.<span class="attr">query</span>(SMS_INBOX, projection, where, <span class="keyword">null</span>, <span class="string">&quot;</span><span class="string">date desc</span><span class="string">&quot;</span>);
+    <span class="keyword">if</span> (<span class="keyword">null</span> == cur)
+        <span class="keyword">return</span>;
+    <span class="keyword">if</span> (cur.<span class="attr">moveToNext</span>()) {
+        String body = cur.<span class="attr">getString</span>(cur.<span class="attr">getColumnIndex</span>(<span class="string">&quot;</span><span class="string">body</span><span class="string">&quot;</span>));
+        Pattern pattern = Pattern.<span class="attr">compile</span>(<span class="string">&quot;</span><span class="string">[0-9]{6}</span><span class="string">&quot;</span>);
+        Matcher matcher = pattern.<span class="attr">matcher</span>(body);
+        <span class="keyword">if</span> (matcher.<span class="attr">find</span>()) {
+            String res = matcher.<span class="attr">group</span>().<span class="attr">substring</span>(<span class="number">1</span>, <span class="number">7</span>);
+            <span class="comment">//设置code</span>
+            mCodeEdit.<span class="attr">setText</span>(res);
+            <span class="keyword">return</span>;
+            }
+        }
+    }
+}</pre></td></tr></table></figure>
+<h4 id="图片旋转"><a class="headerlink" href="#图片旋转" title="链接到此段落"></a><a id="markdown-rotateBitmap"></a>图片旋转</h4>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="function">rotateBitmap</span>(<span class="keyword">int</span> degree, Bitmap bitmap) {
+    Matrix matrix = <span class="keyword">new</span> Matrix();
+    matrix.<span class="attr">postRotate</span>(degree);
+
+    <span class="keyword">return</span> Bitmap.<span class="attr">createBitmap</span>(bitmap, <span class="number">0</span>, <span class="number">0</span>, bitmap.<span class="attr">getWidth</span>(), bitmap.<span class="attr">getHeight</span>(), matrix, <span class="keyword">true</span>);
+}</pre></td></tr></table></figure>
+<h3 id="获取设备所有的存储路径"><a class="headerlink" href="#获取设备所有的存储路径" title="链接到此段落"></a><a id="markdown-getStoragePaths"></a>获取设备所有的存储路径</h3>
+<p>有2种方法，方法1为调用系统方法getVolumePaths获取，方法2为自己解析/proc/mounts文件下的路径</p>
+<h4 id="方法1"><a class="headerlink" href="#方法1" title="链接到此段落"></a>方法1</h4>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="keyword">public</span> <span class="keyword">static</span> String[] <span class="function">getVolumePaths</span>(Context context) {
+    <span class="keyword">try</span> {
+        StorageManager sm = (StorageManager) context.<span class="attr">getSystemService</span>(Context.<span class="attr">STORAGE_SERVICE</span>);
+        String[] paths = (String[]) StorageManager.<span class="attr">class</span>.<span class="attr">getMethod</span>(<span class="string">&quot;</span><span class="string">getVolumePaths</span><span class="string">&quot;</span>).<span class="attr">invoke</span>(sm);
+        List&lt;String&gt; ps = <span class="keyword">new</span> ArrayList&lt;String&gt;();
+        <span class="keyword">for</span> (String path : paths) {
+            String status = (String) StorageManager.<span class="attr">class</span>.<span class="attr">getMethod</span>(<span class="string">&quot;</span><span class="string">getVolumeState</span><span class="string">&quot;</span>, String.<span class="attr">class</span>).<span class="attr">invoke</span>(sm, path);
+            <span class="keyword">if</span> (status.<span class="attr">equals</span>(android.<span class="attr">os</span>.<span class="attr">Environment</span>.<span class="attr">MEDIA_MOUNTED</span>)) {
+                ps.<span class="attr">add</span>(path);
+            }
+        }
+        <span class="keyword">return</span> ps.<span class="attr">toArray</span>(<span class="keyword">new</span> String[ps.<span class="attr">size</span>()]);
+    } <span class="keyword">catch</span> (Exception e) {
+        e.<span class="attr">printStackTrace</span>();
+    }
+
+    <span class="keyword">return</span> <span class="keyword">null</span>;
+}</pre></td></tr></table></figure>
+<h4 id="方法2"><a class="headerlink" href="#方法2" title="链接到此段落"></a>方法2</h4>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="keyword">public</span> <span class="keyword">static</span> String[] <span class="function">getExternalStoragePaths</span>() {
+    BufferedReader in = <span class="keyword">null</span>;
+    <span class="keyword">try</span> {
+        in = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(<span class="string">&quot;</span><span class="string">/proc/mounts</span><span class="string">&quot;</span>)));
+        List&lt;String&gt; ps = <span class="keyword">new</span> ArrayList&lt;String&gt;();
+        <span class="keyword">try</span> {
+            <span class="keyword">for</span> (String l; (l = in.<span class="attr">readLine</span>()) != <span class="keyword">null</span>; ) {
+                <span class="keyword">if</span> (contains(l, KW_BLACK) || !contains(l, KW_WHITE)) {
+                    <span class="keyword">continue</span>;
+                }
+
+                String[] elements = l.<span class="attr">split</span>(<span class="string">&quot;</span><span class="string"> </span><span class="string">&quot;</span>);
+                <span class="keyword">if</span> (elements.<span class="attr">length</span> &gt; <span class="number">1</span> &amp;&amp; elements[<span class="number">1</span>] != <span class="keyword">null</span>) {
+                    ps.<span class="attr">add</span>(elements[<span class="number">1</span>]);
+                }
+            }
+        } <span class="keyword">catch</span> (IOException e) {
+            e.<span class="attr">printStackTrace</span>();
+        }
+        <span class="keyword">return</span> ps.<span class="attr">toArray</span>(<span class="keyword">new</span> String[ps.<span class="attr">size</span>()]);
+    } <span class="keyword">catch</span> (FileNotFoundException e) {
+        e.<span class="attr">printStackTrace</span>();
+    } <span class="keyword">finally</span> {
+        <span class="keyword">if</span> (in != <span class="keyword">null</span>) {
+        <span class="keyword">try</span> {
+            in.<span class="attr">close</span>();
+        } <span class="keyword">catch</span> (IOException e) {}
+        }
+    }
+    <span class="keyword">return</span> <span class="keyword">null</span>;
+}
+
+<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="function">contains</span>(String src, String[] kws) {
+    <span class="keyword">if</span> (src != <span class="keyword">null</span> &amp;&amp; kws != <span class="keyword">null</span>) {
+        <span class="keyword">for</span> (String kw : kws) {
+            <span class="keyword">if</span> (src.<span class="attr">contains</span>(kw)) {
+                <span class="keyword">return</span> <span class="keyword">true</span>;
+            }
+        }
+    }
+    <span class="keyword">return</span> <span class="keyword">false</span>;
+}
+
+ <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] KW_BLACK = {
+           <span class="string">&quot;</span><span class="string">secure</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">asec</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">legacy</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">shell</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">private</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">obb</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">media</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">smb</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">Bootloader</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">Reserve</span><span class="string">&quot;</span>,
+           <span class="string">&quot;</span><span class="string">on</span><span class="string">&quot;</span>,
+   };
+
+   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] KW_WHITE = {
+           <span class="string">&quot;</span><span class="string">fat</span><span class="string">&quot;</span>,
+   };</pre></td></tr></table></figure>
+<h3 id="获取应用进程信息"><a class="headerlink" href="#获取应用进程信息" title="链接到此段落"></a><a id="markdown-getRunningAppProcesses"></a>获取应用进程信息</h3>
+<p>根据系统提供的方法<code>ActivityManager.getRunningAppProcesses</code>可以获取到，但是在<code>API &gt;= 22</code>的设备上获取的信息是不完整的，此时可以通过获取<code>/proc</code>下文件夹进行比对（在开启应用时，在此路径下都会加载一个文件夹用于保存进程信息）,方法来源于<a href="https://github.com/jaredrummler/AndroidProcesses/blob/master/library/src/main/java/com/jaredrummler/android/processes/ProcessManager.java">GitHub</a>。</p>
+<h4 id="部分代码展示"><a class="headerlink" href="#部分代码展示" title="链接到此段落"></a>部分代码展示</h4>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="keyword">public</span> <span class="keyword">static</span> List&lt;AndroidAppProcess&gt; <span class="function">getRunningForegroundApps</span>(Context ctx) {
+    List&lt;AndroidAppProcess&gt; processes = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    File[] files = <span class="keyword">new</span> File(<span class="string">&quot;</span><span class="string">/proc</span><span class="string">&quot;</span>).<span class="attr">listFiles</span>();
+    PackageManager pm = ctx.<span class="attr">getPackageManager</span>();
+    <span class="keyword">for</span> (File file : files) {
+        <span class="keyword">if</span> (file.<span class="attr">isDirectory</span>()) {
+            <span class="keyword">int</span> pid;
+            <span class="keyword">try</span> {
+                pid = Integer.<span class="attr">parseInt</span>(file.<span class="attr">getName</span>());
+            } <span class="keyword">catch</span> (NumberFormatException e) {
+                <span class="keyword">continue</span>;
+            }
+
+            <span class="keyword">try</span> {
+                AndroidAppProcess process = <span class="keyword">new</span> AndroidAppProcess(pid);
+                <span class="keyword">if</span> (process.<span class="attr">foreground</span>
+                    <span class="comment">// ignore system processes. First app user starts at 10000.</span>
+                    &amp;&amp; (process.<span class="attr">uid</span> &lt; <span class="number">1000</span> || process.<span class="attr">uid</span> &gt; <span class="number">9999</span>)
+                    <span class="comment">// ignore processes that are not running in the default app process.</span>
+                    &amp;&amp; !process.<span class="attr">name</span>.<span class="attr">contains</span>(<span class="string">&quot;</span><span class="string">:</span><span class="string">&quot;</span>)
+                    <span class="comment">// Ignore processes that the user cannot launch.</span>
+                    &amp;&amp; pm.<span class="attr">getLaunchIntentForPackage</span>(process.<span class="attr">getPackageName</span>()) != <span class="keyword">null</span>) {
+                        processes.<span class="attr">add</span>(process);
+                    }
+            } <span class="keyword">catch</span> (AndroidAppProcess.<span class="attr">NotAndroidAppProcessException</span> ignored) {
+            } <span class="keyword">catch</span> (IOException e) {
+                log(e, <span class="string">&quot;</span><span class="string">Error reading from /proc/%d.</span><span class="string">&quot;</span>, pid);
+                <span class="comment">// System apps will not be readable on Android 5.0+ if SELinux is enforcing.</span>
+                <span class="comment">// You will need root access or an elevated SELinux context to read all files under /proc.</span>
+            }
+        }
+    }
+    <span class="keyword">return</span> processes;
+}</pre></td></tr></table></figure>
+<h3 id="获取已安装软件的大小"><a class="headerlink" href="#获取已安装软件的大小" title="链接到此段落"></a><a id="markdown-queryPacakgeSize"></a>获取已安装软件的大小</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="keyword">public</span> <span class="keyword">void</span> <span class="function">queryPacakgeSize</span>(AppInfo info) <span class="keyword">throws</span> Exception {
+    <span class="keyword">if</span> (info != <span class="keyword">null</span> &amp;&amp; info.<span class="attr">packageName</span> != <span class="keyword">null</span>) {
+        <span class="comment">// 使用放射机制得到PackageManager类的隐藏函数getPackageSizeInfo</span>
+        <span class="keyword">try</span> {
+            <span class="keyword">int</span> sdkcode = getAndroidSDKVersion();
+            <span class="keyword">if</span> (sdkcode &gt; <span class="number">16</span>) {
+                Method getPackageSizeInfo = mPackageManager.<span class="attr">getClass</span>()
+                           .<span class="attr">getDeclaredMethod</span>(<span class="string">&quot;</span><span class="string">getPackageSizeInfo</span><span class="string">&quot;</span>,
+                                   String.<span class="attr">class</span>, <span class="keyword">int</span>.<span class="attr">class</span>,
+                                   IPackageStatsObserver.<span class="attr">class</span>);
+               <span class="comment">// 调用该函数，并且给其分配参数 ，待调用流程完成后会回调PkgSizeObserver类的函数</span>
+               getPackageSizeInfo.<span class="attr">invoke</span>(mPackageManager,
+                           info.<span class="attr">packageName</span>,
+                           android.<span class="attr">os</span>.<span class="attr">Process</span>.<span class="attr">myUid</span>() / <span class="number">100000</span>,
+                           <span class="keyword">new</span> PkgSizeObserver(info));
+            } <span class="keyword">else</span> {
+                    <span class="comment">// 通过反射机制获得该隐藏函数</span>
+                    Method getPackageSizeInfo = mPackageManager.<span class="attr">getClass</span>()
+                           .<span class="attr">getDeclaredMethod</span>(<span class="string">&quot;</span><span class="string">getPackageSizeInfo</span><span class="string">&quot;</span>,
+                                   String.<span class="attr">class</span>, IPackageStatsObserver.<span class="attr">class</span>);
+                <span class="comment">// 调用该函数，并且给其分配参数 ，待调用流程完成后会回调PkgSizeObserver类的函数</span>
+                getPackageSizeInfo.<span class="attr">invoke</span>(mPackageManager,
+                           info.<span class="attr">packageName</span>, <span class="keyword">new</span> PkgSizeObserver(info));
+           }
+         } <span class="keyword">catch</span> (Exception ex) {
+            ex.<span class="attr">printStackTrace</span>();
+            <span class="keyword">throw</span> ex; <span class="comment">// 抛出异常</span>
+         }
+       }
+   }</pre></td></tr></table></figure>
+<h3 id="生成带倒影的Bitmap图像"><a class="headerlink" href="#生成带倒影的Bitmap图像" title="链接到此段落"></a><a id="markdown-createReflectedImage"></a>生成带倒影的Bitmap图像</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="function">createReflectedImage</span>(Bitmap originalImage,
+                                          <span class="keyword">float</span> reflectionHeightScale, <span class="keyword">int</span> width, <span class="keyword">int</span> height, <span class="keyword">int</span> space) {
+    <span class="keyword">if</span> (<span class="keyword">null</span> == originalImage) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;</span><span class="string">src can not be null</span><span class="string">&quot;</span>);
+    }
+
+    <span class="keyword">if</span> (reflectionHeightScale &lt;= <span class="number">0</span> || reflectionHeightScale &gt; <span class="number">1</span>) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(
+                <span class="string">&quot;</span><span class="string">reflectionHeightScale must be during 0 ~ 1</span><span class="string">&quot;</span>);
+    }
+
+    <span class="keyword">int</span> reflectionHeight = (<span class="keyword">int</span>) (height * reflectionHeightScale);
+
+    Matrix matrix = <span class="keyword">new</span> Matrix();
+    <span class="comment">// 实现图片翻转90度</span>
+    matrix.<span class="attr">preScale</span>(<span class="number">1</span>, -<span class="number">1</span>);
+    <span class="comment">// 创建倒影图片</span>
+    Bitmap reflectionImage = Bitmap.<span class="attr">createBitmap</span>(originalImage, <span class="number">0</span>, height
+            - reflectionHeight, width, reflectionHeight, matrix, <span class="keyword">false</span>);
+    <span class="comment">// 创建总图片（原图片 + 倒影图片）</span>
+    Bitmap finalReflection = Bitmap.<span class="attr">createBitmap</span>(width,
+            (height + reflectionHeight) + space, Config.<span class="attr">ARGB_8888</span>);
+    <span class="comment">// 创建画布</span>
+    Canvas canvas = <span class="keyword">new</span> Canvas(finalReflection);
+    canvas.<span class="attr">drawBitmap</span>(originalImage, <span class="number">0</span>, <span class="number">0</span>, <span class="keyword">null</span>);
+    <span class="comment">// 把倒影图片画到画布上</span>
+    canvas.<span class="attr">drawBitmap</span>(reflectionImage, <span class="number">0</span>, height + <span class="number">1</span> + space, <span class="keyword">null</span>);
+    Paint shaderPaint = <span class="keyword">new</span> Paint();
+    <span class="comment">// 创建线性渐变LinearGradient对象</span>
+    LinearGradient shader = <span class="keyword">new</span> LinearGradient(<span class="number">0</span>,
+            originalImage.<span class="attr">getHeight</span>(), <span class="number">0</span>, finalReflection.<span class="attr">getHeight</span>() + <span class="number">1</span>,
+            <span class="number">0x70ffffff</span>, <span class="number">0x00ffffff</span>, TileMode.<span class="attr">MIRROR</span>);
+    shaderPaint.<span class="attr">setShader</span>(shader);
+    shaderPaint.<span class="attr">setXfermode</span>(<span class="keyword">new</span> PorterDuffXfermode(Mode.<span class="attr">DST_IN</span>));
+    <span class="comment">// 画布画出反转图片大小区域，然后把渐变效果加到其中，就出现了图片的倒影效果。</span>
+    canvas.<span class="attr">drawRect</span>(<span class="number">0</span>, height + <span class="number">1</span>, width, finalReflection.<span class="attr">getHeight</span>(),
+            shaderPaint);
+    <span class="keyword">return</span> finalReflection;
+}</pre></td></tr></table></figure>
+<h3 id="ImageLoader加载本地图片工具类"><a class="headerlink" href="#ImageLoader加载本地图片工具类" title="链接到此段落"></a><a id="markdown-imageloaderlocal"></a>ImageLoader加载本地图片工具类</h3>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="keyword">import</span> android.widget.ImageView;
+
+<span class="keyword">import</span> com.nostra13.universalimageloader.core.ImageLoader;
+
+<span class="comment">/**
+ * 异步加载本地图片工具类
+ *
+ * @author tony
+ *
+ */</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LoadLocalImageUtil</span> {
+    <span class="keyword">private</span> <span class="function">LoadLocalImageUtil</span>() {
+    }
+
+    <span class="keyword">private</span> <span class="keyword">static</span> LoadLocalImageUtil instance = <span class="keyword">null</span>;
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> LoadLocalImageUtil <span class="function">getInstance</span>() {
+        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) {
+            instance = <span class="keyword">new</span> LoadLocalImageUtil();
+        }
+        <span class="keyword">return</span> instance;
+    }
+
+    <span class="comment">/**
+     * 从内存卡中异步加载本地图片
+     *
+     * @param uri
+     * @param imageView
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">displayFromSDCard</span>(String uri, ImageView imageView) {
+        <span class="comment">// String imageUri = &quot;file:///mnt/sdcard/image.png&quot;; // from SD card</span>
+        ImageLoader.<span class="attr">getInstance</span>().<span class="attr">displayImage</span>(<span class="string">&quot;</span><span class="string">file://</span><span class="string">&quot;</span> + uri, imageView);
+    }
+
+    <span class="comment">/**
+     * 从assets文件夹中异步加载图片
+     *
+     * @param imageName
+     *            图片名称，带后缀的，例如：1.png
+     * @param imageView
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">dispalyFromAssets</span>(String imageName, ImageView imageView) {
+        <span class="comment">// String imageUri = &quot;assets://image.png&quot;; // from assets</span>
+        ImageLoader.<span class="attr">getInstance</span>().<span class="attr">displayImage</span>(<span class="string">&quot;</span><span class="string">assets://</span><span class="string">&quot;</span> + imageName,
+                imageView);
+    }
+
+    <span class="comment">/**
+     * 从drawable中异步加载本地图片
+     *
+     * @param imageId
+     * @param imageView
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">displayFromDrawable</span>(<span class="keyword">int</span> imageId, ImageView imageView) {
+        <span class="comment">// String imageUri = &quot;drawable://&quot; + R.drawable.image; // from drawables</span>
+        <span class="comment">// (only images, non-9patch)</span>
+        ImageLoader.<span class="attr">getInstance</span>().<span class="attr">displayImage</span>(<span class="string">&quot;</span><span class="string">drawable://</span><span class="string">&quot;</span> + imageId,
+                imageView);
+    }
+
+    <span class="comment">/**
+     * 从内容提提供者中抓取图片
+     */</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">displayFromContent</span>(String uri, ImageView imageView) {
+        <span class="comment">// String imageUri = &quot;content://media/external/audio/albumart/13&quot;; //</span>
+        <span class="comment">// from content provider</span>
+        ImageLoader.<span class="attr">getInstance</span>().<span class="attr">displayImage</span>(<span class="string">&quot;</span><span class="string">content://</span><span class="string">&quot;</span> + uri, imageView);
+    }
+
+}</pre></td></tr></table></figure></div><footer class="article-footer"><a class="back-to-notes" href="/archives/">← 返回全部文章</a></footer><nav class="neighbor-notes" aria-label="相邻文章"><a href="/2016/08/03/wt-center-image-span/"><span>上一篇</span><strong>Android TextView头尾展示标签图片，并且尾部标签不被挤出</strong><span class="arrow" aria-hidden="true">↗</span></a><a href="/2016/08/15/wt-android-intent-market/"><span>下一篇</span><strong>Android 系统评分的调用及自定义</strong><span class="arrow" aria-hidden="true">↗</span></a></nav></article><aside class="reading-aside" aria-label="文章导航"><div class="toc-sticky"><p class="toc-heading">本文目录 <span data-reading-percent>0%</span></p><nav aria-label="桌面文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-0"><a href="#%E7%9B%AE%E5%BD%95">目录</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E6%89%8B%E6%9C%BA%E9%AA%8C%E8%AF%81%E7%A0%81">获取手机验证码</a></li><li class="toc-level-2"><a href="#%E5%9B%BE%E7%89%87%E6%97%8B%E8%BD%AC">图片旋转</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%89%80%E6%9C%89%E7%9A%84%E5%AD%98%E5%82%A8%E8%B7%AF%E5%BE%84">获取设备所有的存储路径</a></li><li class="toc-level-2"><a href="#%E6%96%B9%E6%B3%951">方法1</a></li><li class="toc-level-2"><a href="#%E6%96%B9%E6%B3%952">方法2</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E5%BA%94%E7%94%A8%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF">获取应用进程信息</a></li><li class="toc-level-2"><a href="#%E9%83%A8%E5%88%86%E4%BB%A3%E7%A0%81%E5%B1%95%E7%A4%BA">部分代码展示</a></li><li class="toc-level-1"><a href="#%E8%8E%B7%E5%8F%96%E5%B7%B2%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%A4%A7%E5%B0%8F">获取已安装软件的大小</a></li><li class="toc-level-1"><a href="#%E7%94%9F%E6%88%90%E5%B8%A6%E5%80%92%E5%BD%B1%E7%9A%84Bitmap%E5%9B%BE%E5%83%8F">生成带倒影的Bitmap图像</a></li><li class="toc-level-1"><a href="#ImageLoader%E5%8A%A0%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87%E5%B7%A5%E5%85%B7%E7%B1%BB">ImageLoader加载本地图片工具类</a></li></ol></nav><div class="toc-bottom"><a href="#main">回到顶部 ↑</a><span>慢慢读，也慢慢想。</span></div></div></aside></div>
 </main><footer class="wrap foot"><span class="signature">© 2026 wangbax</span><div><a href="/project/">项目</a><a href="/archives/">文章</a><a href="/about/">关于我</a><a href="https://github.com/wangbax" target="_blank" rel="noopener">GitHub ↗</a></div></footer><dialog class="search-dialog" id="site-search" aria-labelledby="search-title">
 <div class="search-dialog-head"><h2 id="search-title">找一篇手记</h2><form method="dialog"><button type="submit" class="search-close" aria-label="关闭搜索">×</button></form></div>
 <div class="search-widget" data-search-widget>

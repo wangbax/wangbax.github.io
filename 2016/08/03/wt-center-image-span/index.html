@@ -52,7 +52,7 @@
 <meta property="og:type" content="article"><meta property="og:site_name" content="wangbax"><meta property="og:title" content="Android TextView头尾展示标签图片，并且尾部标签不被挤出"><meta property="og:description" content="开发中需要为TextView头尾添加标签图片，并且 尾部标签不被挤出 ，考虑了几种可能的方案："><meta property="og:url" content="https://www.wangbaxai.top/2016/08/03/wt-center-image-span/"><meta property="og:image" content="https://www.wangbaxai.top/images/avatar.png">
 <meta name="twitter:card" content="summary"><meta name="twitter:title" content="Android TextView头尾展示标签图片，并且尾部标签不被挤出"><meta name="twitter:description" content="开发中需要为TextView头尾添加标签图片，并且 尾部标签不被挤出 ，考虑了几种可能的方案："><meta property="article:published_time" content="2016-08-03T14:39:22+08:00"><meta property="article:modified_time" content="2017-06-07T17:04:32+08:00">
 <link rel="stylesheet" href="/css/app.css?v=61b908872ac5"><script src="/js/site.js?v=1059b6693d8c" defer></script><script src="/js/article.js?v=9bbefee4c352" defer></script>
-</head><body class="reading-page" data-search-module="/js/search.js?v=0b2beb899a01" data-search-index="/search.json?v=ece0bfddf346">
+</head><body class="reading-page" data-search-module="/js/search.js?v=35667f834fd9" data-search-index="/search.json?v=76f0873e267a">
 <a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="wrap top">
   <a class="brand" href="/" aria-label="wangbax 首页"><img class="mark profile-image" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="29px" width="29" height="29" alt="" loading="eager" decoding="async" fetchpriority="high">wangbax</a>
@@ -60,20 +60,25 @@
 </div></header><div class="reading-progress" aria-hidden="true"><span id="reading-progress"></span></div>
 <main id="main" class="wrap article-main">
 <header class="article-hero"><div class="breadcrumb"><a href="/archives/">← 开发手记</a><span class="breadcrumb-separator" aria-hidden="true">/</span><span>Android</span></div><h1>Android TextView头尾展示标签图片，并且尾部标签不被挤出</h1><div class="article-meta"><a class="article-author" href="/about/"><img class="author-avatar" src="/images/optimized/avatar-64.webp?v=ee6ee8104a73" srcset="/images/optimized/avatar-64.webp?v=ee6ee8104a73 64w, /images/optimized/avatar-96.webp?v=4a1dbe9cbe62 96w, /images/optimized/avatar-160.webp?v=9655bbe2f29d 160w, /images/optimized/avatar-300.webp?v=8b99cb4964fe 300w" sizes="30px" width="30" height="30" alt="" loading="eager" decoding="async" fetchpriority="auto"><span>wangbax</span></a><time datetime="2016-08-03T14:39:22+08:00">2016-08-03</time><span>约 4 分钟</span><span class="article-updated">更新于 2017-06-07</span></div><svg class="article-sigil" viewBox="0 0 160 160" fill="none" aria-hidden="true"><circle cx="80" cy="80" r="44"/><ellipse cx="80" cy="80" rx="71" ry="22" transform="rotate(-30 80 80)"/><ellipse cx="80" cy="80" rx="63" ry="30" transform="rotate(34 80 80)"/><circle cx="133" cy="50" r="3" fill="currentColor"/></svg></header>
-<div class="reading-layout"><article class="article-column" aria-label="Android TextView头尾展示标签图片，并且尾部标签不被挤出"><details class="mobile-toc"><summary>本文目录 <span aria-hidden="true">＋</span></summary><nav aria-label="手机文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-1"><a href="#%E5%AF%B9%E6%AF%94">对比</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%BA%8C">方案二</a></li><li class="toc-level-2"><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89Span">自定义Span</a></li><li class="toc-level-2"><a href="#%E6%96%87%E6%9C%AC%E9%95%BF%E5%BA%A6%E9%97%AE%E9%A2%98">文本长度问题</a></li><li class="toc-level-2"><a href="#%E6%95%88%E6%9E%9C">效果</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%B8%89">方案三</a></li><li class="toc-level-0"><a href="#%E9%B8%A3%E8%B0%A2">鸣谢</a></li></ol></nav></details><div class="article-body" id="article-body"><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>开发中需要为TextView头尾添加标签图片，并且<strong>尾部标签不被挤出</strong>，考虑了几种可能的方案：</p>
+<div class="reading-layout"><article class="article-column" aria-label="Android TextView头尾展示标签图片，并且尾部标签不被挤出"><details class="mobile-toc"><summary>本文目录 <span aria-hidden="true">＋</span></summary><nav aria-label="手机文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-1"><a href="#%E5%AF%B9%E6%AF%94">对比</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%BA%8C">方案二</a></li><li class="toc-level-2"><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89Span">自定义Span</a></li><li class="toc-level-2"><a href="#%E6%96%87%E6%9C%AC%E9%95%BF%E5%BA%A6%E9%97%AE%E9%A2%98">文本长度问题</a></li><li class="toc-level-2"><a href="#%E6%95%88%E6%9E%9C">效果</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%B8%89">方案三</a></li><li class="toc-level-0"><a href="#%E9%B8%A3%E8%B0%A2">鸣谢</a></li></ol></nav></details><div class="article-body" id="article-body"><h2 id="简介"><a class="headerlink" href="#简介" title="链接到此段落"></a>简介</h2>
+<p>开发中需要为TextView头尾添加标签图片，并且<strong>尾部标签不被挤出</strong>，考虑了几种可能的方案：</p>
 <ol>
 <li>动态计算TextView的文本长度和每行的宽度</li>
 <li>使用TextView的Span</li>
 <li>自定义一个View，自己绘制文本和标签图片</li>
 </ol>
-<a id="more"></a>
-<h3 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h3><ul>
+<p><a id="more"></a></p>
+<h3 id="对比"><a class="headerlink" href="#对比" title="链接到此段落"></a>对比</h3>
+<ul>
 <li>第一种由于Android的碎片化极其严重，各种机型，各种字体等等，更重要的是TextView并没有对应的API可以进行回去绘制。PASS。</li>
-<li>第二种可行性还是不错的，Android原生支持了很多类型的Span。但是有一个问题就是没有可以当图片和文本居中的Span可以使用。如果使用就必须自定义一个Span。查看<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html?q=DynamicDrawableSpan" target="_blank" rel="noopener">DynamicDrawableSpan</a>,<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html?q=ImageSpan" target="_blank" rel="noopener">ImageSpan</a>等Span的源码，发现自定义的话是可以满足的。待定。</li>
+<li>第二种可行性还是不错的，Android原生支持了很多类型的Span。但是有一个问题就是没有可以当图片和文本居中的Span可以使用。如果使用就必须自定义一个Span。查看<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html?q=DynamicDrawableSpan">DynamicDrawableSpan</a>,<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html?q=ImageSpan">ImageSpan</a>等Span的源码，发现自定义的话是可以满足的。待定。</li>
 <li>第三种自己可以定制自己想实现的各种效果。但是适配性比较难保证。待定</li>
 </ul>
 <p>最后综合考虑，实验第二种是否能满足，如果不能满足，则使用第三种。</p>
-<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><h4 id="自定义Span"><a href="#自定义Span" class="headerlink" title="自定义Span"></a>自定义Span</h4><p>涉及到的类：<code>Paint.FontMetrics</code>，它表示绘制字体时的度量标准。<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html" target="_blank" rel="noopener">Google的官方api文档</a>对它的字段说明如下：<br><picture><source type="image/webp" srcset="/images/optimized/2016/20160803143922-1-480.webp?v=f1f1e7ed33b9 480w, /images/optimized/2016/20160803143922-1-1023.webp?v=68affd84af85 1023w" sizes="(max-width: 650px) min(1023px, calc(100vw - 40px)), (max-width: 1000px) min(1023px, calc(100vw - 316px)), 760px"><img src="/images/2016/20160803143922-1.png?v=29b018012ffb" width="1023" height="600" style="aspect-ratio:1023/600" alt="android imagespan fontmetrics" loading="lazy" decoding="async" data-original="/images/2016/20160803143922-1.png?v=29b018012ffb"></picture></p>
+<h3 id="方案二"><a class="headerlink" href="#方案二" title="链接到此段落"></a>方案二</h3>
+<h4 id="自定义Span"><a class="headerlink" href="#自定义Span" title="链接到此段落"></a>自定义Span</h4>
+<p>涉及到的类：<code>Paint.FontMetrics</code>，它表示绘制字体时的度量标准。<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html">Google的官方api文档</a>对它的字段说明如下：
+<picture><source type="image/webp" srcset="/images/optimized/2016/20160803143922-1-480.webp?v=f1f1e7ed33b9 480w, /images/optimized/2016/20160803143922-1-1023.webp?v=68affd84af85 1023w" sizes="(max-width: 650px) min(1023px, calc(100vw - 40px)), (max-width: 1000px) min(1023px, calc(100vw - 316px)), 760px"><img src="/images/2016/20160803143922-1.png?v=29b018012ffb" width="1023" height="600" style="aspect-ratio:1023/600" alt="android imagespan fontmetrics" loading="lazy" decoding="async" data-original="/images/2016/20160803143922-1.png?v=29b018012ffb"></picture></p>
 <ul>
 <li>ascent: 字体最上端到基线的距离，为负值。</li>
 <li>descent：字体最下端到基线的距离，为正值。</li>
@@ -81,25 +86,125 @@
 <li>top: 最高字符到baseline的距离。即为ascent的最大值</li>
 <li>leading: 上一行字符的descent到下一行字符ascent的距离</li>
 </ul>
-<p>回到主题，我们要让图片与<code>Textview</code>对齐，只需把图片放到descent线和ascent线之间的中间位置就可以了。实现方式为仿照<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html?q=DynamicDrawableSpan" target="_blank" rel="noopener">DynamicDrawableSpan</a>，重写<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html?q=DynamicDrawableSpan" target="_blank" rel="noopener">DynamicDrawableSpan</a>类的draw方法。最终实现如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * TagTitleViewSpan</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 仿照&#123;<span class="doctag">@link</span> android.text.style.DynamicDrawableSpan&#125;</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * Created by wt on 17/3/10.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TagTitleViewSpan</span> <span class="keyword">extends</span> <span class="title">ReplacementSpan</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// ...省略构造参数</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 绘制实现类</span></span><br><span class="line">	<span class="keyword">private</span> TagViewInner mTagInner;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">(@NonNull Paint paint, CharSequence text, @IntRange(from = <span class="number">0</span>)</span> <span class="keyword">int</span> start, @<span class="title">IntRange</span><span class="params">(from = <span class="number">0</span>)</span> <span class="keyword">int</span> end, @Nullable Paint.FontMetricsInt fm) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == mTagInner || !mTagInner.isValid()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Rect rect = mTagInner.getRect();</span><br><span class="line">        <span class="keyword">if</span> (fm != <span class="keyword">null</span>) &#123;</span><br><span class="line">        	<span class="comment">// 保证当文字高度低于图片时，文字居中</span></span><br><span class="line">            Paint.FontMetricsInt fmPaint = paint.getFontMetricsInt();</span><br><span class="line">            <span class="keyword">int</span> fontHeight = fmPaint.bottom - fmPaint.top;</span><br><span class="line">            <span class="keyword">int</span> drHeight = rect.bottom - rect.top;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> top = drHeight / <span class="number">2</span> - fontHeight / <span class="number">4</span>;</span><br><span class="line">            <span class="keyword">int</span> bottom = drHeight / <span class="number">2</span> + fontHeight / <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line">            fm.ascent = -bottom;</span><br><span class="line">            fm.top = -bottom;</span><br><span class="line">            fm.bottom = top;</span><br><span class="line">            fm.descent = top;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> rect.width() &lt; <span class="number">0</span> ? <span class="number">0</span> : rect.width();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">(@NonNull Canvas canvas, CharSequence text, @IntRange(from = <span class="number">0</span>)</span> <span class="keyword">int</span> start, @<span class="title">IntRange</span><span class="params">(from = <span class="number">0</span>)</span> <span class="keyword">int</span> end, <span class="keyword">float</span> x, <span class="keyword">int</span> top, <span class="keyword">int</span> y, <span class="keyword">int</span> bottom, @NonNull Paint paint) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == mTagInner || !mTagInner.isValid()) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Rect rect = mTagInner.getRect();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> transY = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">switch</span> (mVerticalAlignment) &#123;</span><br><span class="line">            <span class="keyword">case</span> ALIGN_BASELINE:</span><br><span class="line">                transY = bottom - rect.bottom - paint.getFontMetricsInt().descent;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> ALIGN_TEXT_BOTTOM:</span><br><span class="line">                Paint.FontMetricsInt fm1 = paint.getFontMetricsInt();</span><br><span class="line">                transY = y + fm1.descent / <span class="number">2</span> - rect.bottom;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> ALIGN_TEXT_CENTER:</span><br><span class="line">            	<span class="comment">// 图片居中计算</span></span><br><span class="line">                Paint.FontMetricsInt fm = paint.getFontMetricsInt();</span><br><span class="line">                transY = (y + fm.descent + y + fm.ascent) / <span class="number">2</span></span><br><span class="line">                        - rect.bottom / <span class="number">2</span>;</span><br><span class="line">                <span class="keyword">if</span> (transY &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                    transY = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                transY = bottom - rect.bottom;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        canvas.save();</span><br><span class="line">        <span class="comment">// 绘制图片</span></span><br><span class="line">        canvas.translate(x, transY);</span><br><span class="line">        mTagInner.draw(context, canvas);</span><br><span class="line">        canvas.restore();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="文本长度问题"><a href="#文本长度问题" class="headerlink" title="文本长度问题"></a>文本长度问题</h4><p>既然<strong>图片插入</strong>和<strong>居中</strong>没有问题，那么最后一个问题就是如何保证<strong>尾部标签不被挤出</strong>呢。搜索到<a href="http://blog.csdn.net/sodino/article/details/8778761" target="_blank" rel="noopener">[Android]TextUtils.ellipsize()截取指定长度字符串(附图文混排)</a>，让我注意到<a href="https://developer.android.com/reference/android/text/TextUtils.html#ellipsize" target="_blank" rel="noopener">TextUtils.html.ellipsize(text, p, avail, where)</a>这个方法。其中<code>avail</code>字段代表的是有效长度，<code>text</code> 代码需要截取的字段。这个方法是TextView截取的静态方法。经测试，可用。</p>
+<p>回到主题，我们要让图片与<code>Textview</code>对齐，只需把图片放到descent线和ascent线之间的中间位置就可以了。实现方式为仿照<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html?q=DynamicDrawableSpan">DynamicDrawableSpan</a>，重写<a href="https://developer.android.com/reference/android/graphics/Paint.FontMetrics.html?q=DynamicDrawableSpan">DynamicDrawableSpan</a>类的draw方法。最终实现如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="comment">/**
+ * TagTitleViewSpan
+ * &lt;p&gt;
+ * 仿照{@link android.text.style.DynamicDrawableSpan}
+ * &lt;p&gt;
+ * Created by wt on 17/3/10.
+ */</span>
+<span class="keyword">class</span> <span class="title">TagTitleViewSpan</span> <span class="keyword">extends</span> ReplacementSpan {
+
+    <span class="comment">// ...省略构造参数</span>
+
+    <span class="comment">// 绘制实现类</span>
+    <span class="keyword">private</span> TagViewInner mTagInner;
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">int</span> <span class="function">getSize</span>(@NonNull Paint paint, CharSequence text, @IntRange(from = <span class="number">0</span>) <span class="keyword">int</span> start, @IntRange(from = <span class="number">0</span>) <span class="keyword">int</span> end, @Nullable Paint.<span class="attr">FontMetricsInt</span> fm) {
+        <span class="keyword">if</span> (<span class="keyword">null</span> == mTagInner || !mTagInner.<span class="attr">isValid</span>()) {
+            <span class="keyword">return</span> <span class="number">0</span>;
+        }
+        Rect rect = mTagInner.<span class="attr">getRect</span>();
+        <span class="keyword">if</span> (fm != <span class="keyword">null</span>) {
+            <span class="comment">// 保证当文字高度低于图片时，文字居中</span>
+            Paint.<span class="attr">FontMetricsInt</span> fmPaint = paint.<span class="attr">getFontMetricsInt</span>();
+            <span class="keyword">int</span> fontHeight = fmPaint.<span class="attr">bottom</span> - fmPaint.<span class="attr">top</span>;
+            <span class="keyword">int</span> drHeight = rect.<span class="attr">bottom</span> - rect.<span class="attr">top</span>;
+
+            <span class="keyword">int</span> top = drHeight / <span class="number">2</span> - fontHeight / <span class="number">4</span>;
+            <span class="keyword">int</span> bottom = drHeight / <span class="number">2</span> + fontHeight / <span class="number">4</span>;
+
+            fm.<span class="attr">ascent</span> = -bottom;
+            fm.<span class="attr">top</span> = -bottom;
+            fm.<span class="attr">bottom</span> = top;
+            fm.<span class="attr">descent</span> = top;
+        }
+        <span class="keyword">return</span> rect.<span class="attr">width</span>() &lt; <span class="number">0</span> ? <span class="number">0</span> : rect.<span class="attr">width</span>();
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">draw</span>(@NonNull Canvas canvas, CharSequence text, @IntRange(from = <span class="number">0</span>) <span class="keyword">int</span> start, @IntRange(from = <span class="number">0</span>) <span class="keyword">int</span> end, <span class="keyword">float</span> x, <span class="keyword">int</span> top, <span class="keyword">int</span> y, <span class="keyword">int</span> bottom, @NonNull Paint paint) {
+        <span class="keyword">if</span> (<span class="keyword">null</span> == mTagInner || !mTagInner.<span class="attr">isValid</span>()) {
+            <span class="keyword">return</span>;
+        }
+        Rect rect = mTagInner.<span class="attr">getRect</span>();
+
+        <span class="keyword">int</span> transY = <span class="number">0</span>;
+        <span class="keyword">switch</span> (mVerticalAlignment) {
+            <span class="keyword">case</span> ALIGN_BASELINE:
+                transY = bottom - rect.<span class="attr">bottom</span> - paint.<span class="attr">getFontMetricsInt</span>().<span class="attr">descent</span>;
+                <span class="keyword">break</span>;
+            <span class="keyword">case</span> ALIGN_TEXT_BOTTOM:
+                Paint.<span class="attr">FontMetricsInt</span> fm1 = paint.<span class="attr">getFontMetricsInt</span>();
+                transY = y + fm1.<span class="attr">descent</span> / <span class="number">2</span> - rect.<span class="attr">bottom</span>;
+                <span class="keyword">break</span>;
+            <span class="keyword">case</span> ALIGN_TEXT_CENTER:
+                <span class="comment">// 图片居中计算</span>
+                Paint.<span class="attr">FontMetricsInt</span> fm = paint.<span class="attr">getFontMetricsInt</span>();
+                transY = (y + fm.<span class="attr">descent</span> + y + fm.<span class="attr">ascent</span>) / <span class="number">2</span>
+                        - rect.<span class="attr">bottom</span> / <span class="number">2</span>;
+                <span class="keyword">if</span> (transY &lt; <span class="number">0</span>) {
+                    transY = <span class="number">0</span>;
+                }
+                <span class="keyword">break</span>;
+            <span class="keyword">default</span>:
+                transY = bottom - rect.<span class="attr">bottom</span>;
+                <span class="keyword">break</span>;
+        }
+
+        canvas.<span class="attr">save</span>();
+        <span class="comment">// 绘制图片</span>
+        canvas.<span class="attr">translate</span>(x, transY);
+        mTagInner.<span class="attr">draw</span>(context, canvas);
+        canvas.<span class="attr">restore</span>();
+    }
+
+}</pre></td></tr></table></figure>
+<h4 id="文本长度问题"><a class="headerlink" href="#文本长度问题" title="链接到此段落"></a>文本长度问题</h4>
+<p>既然<strong>图片插入</strong>和<strong>居中</strong>没有问题，那么最后一个问题就是如何保证<strong>尾部标签不被挤出</strong>呢。搜索到<a href="http://blog.csdn.net/sodino/article/details/8778761">[Android]TextUtils.ellipsize()截取指定长度字符串(附图文混排)</a>，让我注意到<a href="https://developer.android.com/reference/android/text/TextUtils.html#ellipsize">TextUtils.html.ellipsize(text, p, avail, where)</a>这个方法。其中<code>avail</code>字段代表的是有效长度，<code>text</code> 代码需要截取的字段。这个方法是TextView截取的静态方法。经测试，可用。</p>
 <p><code>avail</code>字段必须是<strong>精确</strong>长度，意思就是说，他会按照你传入的长度对<code>text</code>截取。一开始，我是计算长度是按照：</p>
 <p><code>View的长度 * MaxLines - 图片已占用的长度 - padding(l,t,r,b)</code></p>
 <p><picture><source type="image/webp" srcset="/images/optimized/2017/20170607163800-326.webp?v=01f664dffd30 326w" sizes="(max-width: 650px) min(326px, calc(100vw - 40px)), (max-width: 1000px) min(326px, calc(100vw - 316px)), 326px"><img src="/images/2017/20170607163800.jpg?v=4bdef14c54e5" width="326" height="349" style="aspect-ratio:326/349" alt="但是" loading="lazy" decoding="async" data-original="/images/2017/20170607163800.jpg?v=4bdef14c54e5"></picture></p>
 <p>当把截取后的文本设为<code>TextView</code>时，<code>TextView</code>会根据自身的属性进行布局，当文本文本换行时，如果遇到当前行空出部分字符的情况，就会导致实际的<strong>精确</strong>长度比我计算时的要短，最后的标签图片还是会截。无奈，经调试确认方案是：在计算时，每行减去<code>textsize / 3</code>，即：</p>
 <p><code>View的长度 * maxLines - 图片已占用的长度 - padding(l,t,r,b) - textsize / 3 * (maxLines - 1)</code></p>
 <p>最后计算的代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 截取传入的字符串</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> old       传入的字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> usedWidth 已被占用的宽度</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 截取好的字符串</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">measureText</span><span class="params">(String old, <span class="keyword">int</span> usedWidth)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (TextUtils.isEmpty(old)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> maxLines = TextViewCompat.getMaxLines(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">if</span> (maxLines == Integer.MAX_VALUE) &#123;</span><br><span class="line">        <span class="keyword">return</span> old;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (maxLines &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        maxLines = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//有效文本展示区域</span></span><br><span class="line">    <span class="keyword">int</span> availableWidth = maxLines * (getWidth() -</span><br><span class="line">            getPaddingLeft() - getPaddingRight())</span><br><span class="line">            - usedWidth - (<span class="keyword">int</span>) getTextSize() / <span class="number">3</span> * (maxLines - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> (String) TextUtils.ellipsize(old, getPaint(), availableWidth, TextUtils.TruncateAt.END);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p><picture><source type="image/webp" srcset="/images/optimized/2016/20160803143922-3-480.webp?v=50158f72041e 480w, /images/optimized/2016/20160803143922-3-1080.webp?v=fda9acec7617 1080w" sizes="(max-width: 650px) min(1080px, calc(100vw - 40px)), (max-width: 1000px) min(1080px, calc(100vw - 316px)), 760px"><img src="/images/2016/20160803143922-3.png?v=a45b1fd4b47a" width="1080" height="1920" style="aspect-ratio:1080/1920" alt="效果图" loading="lazy" decoding="async" data-original="/images/2016/20160803143922-3.png?v=a45b1fd4b47a"></picture></p>
-<h3 id="方案三"><a href="#方案三" class="headerlink" title="方案三"></a>方案三</h3><p><em>TODO</em></p>
-<h2 id="鸣谢"><a href="#鸣谢" class="headerlink" title="鸣谢"></a>鸣谢</h2><ul>
-<li><a href="http://blog.csdn.net/sodino/article/details/8778761" target="_blank" rel="noopener">TextUtils.ellipsize()截取指定长度字符串(附图文混排)</a></li>
-<li><a href="http://www.cnblogs.com/withwind318/p/5541267.html" target="_blank" rel="noopener">Android ImageSpan与TextView中的text居中对齐问题解决（无论TextView设置行距与否）</a></li>
-<li><a href="http://mikewang.blog.51cto.com/3826268/871765" target="_blank" rel="noopener">Android字符串进阶之三：字体属性及测量（FontMetrics）</a></li>
-<li><a href="http://blog.csdn.net/gaoyucindy/article/details/39473135" target="_blank" rel="noopener">Android ImageSpan的图文居中对齐</a></li>
-</ul>
-</div><footer class="article-footer"><a class="back-to-notes" href="/archives/">← 返回全部文章</a></footer><nav class="neighbor-notes" aria-label="相邻文章"><a href="/2016/08/08/wt-android-methods/"><span>下一篇</span><strong>Android 收藏方法</strong><span class="arrow" aria-hidden="true">↗</span></a></nav></article><aside class="reading-aside" aria-label="文章导航"><div class="toc-sticky"><p class="toc-heading">本文目录 <span data-reading-percent>0%</span></p><nav aria-label="桌面文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-1"><a href="#%E5%AF%B9%E6%AF%94">对比</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%BA%8C">方案二</a></li><li class="toc-level-2"><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89Span">自定义Span</a></li><li class="toc-level-2"><a href="#%E6%96%87%E6%9C%AC%E9%95%BF%E5%BA%A6%E9%97%AE%E9%A2%98">文本长度问题</a></li><li class="toc-level-2"><a href="#%E6%95%88%E6%9E%9C">效果</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%B8%89">方案三</a></li><li class="toc-level-0"><a href="#%E9%B8%A3%E8%B0%A2">鸣谢</a></li></ol></nav><div class="toc-bottom"><a href="#main">回到顶部 ↑</a><span>慢慢读，也慢慢想。</span></div></div></aside></div>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="comment">/**
+ * 截取传入的字符串
+ *
+ * @param old       传入的字符串
+ * @param usedWidth 已被占用的宽度
+ * @return 截取好的字符串
+ */</span>
+<span class="keyword">private</span> String <span class="function">measureText</span>(String old, <span class="keyword">int</span> usedWidth) {
+    <span class="keyword">if</span> (TextUtils.<span class="attr">isEmpty</span>(old)) {
+        <span class="keyword">return</span> <span class="keyword">null</span>;
+    }
+    <span class="keyword">int</span> maxLines = TextViewCompat.<span class="attr">getMaxLines</span>(<span class="keyword">this</span>);
+    <span class="keyword">if</span> (maxLines == Integer.<span class="attr">MAX_VALUE</span>) {
+        <span class="keyword">return</span> old;
+    }
+    <span class="keyword">if</span> (maxLines &lt; <span class="number">0</span>) {
+        maxLines = <span class="number">0</span>;
+    }
+    <span class="comment">//有效文本展示区域</span>
+    <span class="keyword">int</span> availableWidth = maxLines * (getWidth() -
+            getPaddingLeft() - getPaddingRight())
+            - usedWidth - (<span class="keyword">int</span>) getTextSize() / <span class="number">3</span> * (maxLines - <span class="number">1</span>);
+    <span class="keyword">return</span> (String) TextUtils.<span class="attr">ellipsize</span>(old, getPaint(), availableWidth, TextUtils.<span class="attr">TruncateAt</span>.<span class="attr">END</span>);
+}</pre></td></tr></table></figure>
+<h4 id="效果"><a class="headerlink" href="#效果" title="链接到此段落"></a>效果</h4>
+<p><picture><source type="image/webp" srcset="/images/optimized/2016/20160803143922-3-480.webp?v=50158f72041e 480w, /images/optimized/2016/20160803143922-3-1080.webp?v=fda9acec7617 1080w" sizes="(max-width: 650px) min(1080px, calc(100vw - 40px)), (max-width: 1000px) min(1080px, calc(100vw - 316px)), 760px"><img src="/images/2016/20160803143922-3.png?v=a45b1fd4b47a" width="1080" height="1920" style="aspect-ratio:1080/1920" alt="效果图" loading="lazy" decoding="async" data-original="/images/2016/20160803143922-3.png?v=a45b1fd4b47a"></picture></p>
+<h3 id="方案三"><a class="headerlink" href="#方案三" title="链接到此段落"></a>方案三</h3>
+<p><em>TODO</em></p>
+<h2 id="鸣谢"><a class="headerlink" href="#鸣谢" title="链接到此段落"></a>鸣谢</h2>
+<ul>
+<li><a href="http://blog.csdn.net/sodino/article/details/8778761">TextUtils.ellipsize()截取指定长度字符串(附图文混排)</a></li>
+<li><a href="http://www.cnblogs.com/withwind318/p/5541267.html">Android ImageSpan与TextView中的text居中对齐问题解决（无论TextView设置行距与否）</a></li>
+<li><a href="http://mikewang.blog.51cto.com/3826268/871765">Android字符串进阶之三：字体属性及测量（FontMetrics）</a></li>
+<li><a href="http://blog.csdn.net/gaoyucindy/article/details/39473135">Android ImageSpan的图文居中对齐</a></li>
+</ul></div><footer class="article-footer"><a class="back-to-notes" href="/archives/">← 返回全部文章</a></footer><nav class="neighbor-notes" aria-label="相邻文章"><a href="/2016/08/08/wt-android-methods/"><span>下一篇</span><strong>Android 收藏方法</strong><span class="arrow" aria-hidden="true">↗</span></a></nav></article><aside class="reading-aside" aria-label="文章导航"><div class="toc-sticky"><p class="toc-heading">本文目录 <span data-reading-percent>0%</span></p><nav aria-label="桌面文章目录"><ol class="toc-list"><li class="toc-level-0"><a href="#%E7%AE%80%E4%BB%8B">简介</a></li><li class="toc-level-1"><a href="#%E5%AF%B9%E6%AF%94">对比</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%BA%8C">方案二</a></li><li class="toc-level-2"><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89Span">自定义Span</a></li><li class="toc-level-2"><a href="#%E6%96%87%E6%9C%AC%E9%95%BF%E5%BA%A6%E9%97%AE%E9%A2%98">文本长度问题</a></li><li class="toc-level-2"><a href="#%E6%95%88%E6%9E%9C">效果</a></li><li class="toc-level-1"><a href="#%E6%96%B9%E6%A1%88%E4%B8%89">方案三</a></li><li class="toc-level-0"><a href="#%E9%B8%A3%E8%B0%A2">鸣谢</a></li></ol></nav><div class="toc-bottom"><a href="#main">回到顶部 ↑</a><span>慢慢读，也慢慢想。</span></div></div></aside></div>
 </main><footer class="wrap foot"><span class="signature">© 2026 wangbax</span><div><a href="/project/">项目</a><a href="/archives/">文章</a><a href="/about/">关于我</a><a href="https://github.com/wangbax" target="_blank" rel="noopener">GitHub ↗</a></div></footer><dialog class="search-dialog" id="site-search" aria-labelledby="search-title">
 <div class="search-dialog-head"><h2 id="search-title">找一篇手记</h2><form method="dialog"><button type="submit" class="search-close" aria-label="关闭搜索">×</button></form></div>
 <div class="search-widget" data-search-widget>
