@@ -71,19 +71,13 @@
 [data-theme="dark"] .toc-list a[aria-current]{border-left-color:#c9a181;color:#e5c2a0;background:linear-gradient(90deg,#78523640,transparent)}
 [data-theme="dark"] .mobile-toc{border-color:#5b4939;background:#332b24}
 [data-theme="dark"] .mobile-toc summary{color:#d4b292}
-[data-theme="dark"] .article-tags a{border-color:#66503d;background:#372d24;color:#d4af8c}
-[data-theme="dark"] .article-tags a:hover{border-color:#b28e6c}
-[data-theme="dark"] :is(.article-category,.neighbor-notes span:not(.arrow)){color:#bba086}
-[data-theme="dark"] :is(.article-category a,.back-to-notes,.neighbor-notes .arrow){color:#d0ad8b}
+
+[data-theme="dark"] .neighbor-notes span:not(.arrow){color:#bba086}
+[data-theme="dark"] :is(.back-to-notes,.neighbor-notes .arrow){color:#d0ad8b}
 [data-theme="dark"] .neighbor-notes strong{color:#d7bda2}
 [data-theme="dark"] :is(.collection-hero .eyebrow,.collection-hero>p:last-child,.archive-year>h2,.archive-year>h2 span){color:#baa189}
 [data-theme="dark"] :is(.collection-hero h1,.about-intro h1){color:#eedbc7}
-[data-theme="dark"] .pagination a{color:#ceb08f}
-[data-theme="dark"] .pagination a[aria-current]{border-color:#795c42;background:#493626;color:#e4c5a3}
-[data-theme="dark"] .pagination a:hover{border-color:#bda083}
-[data-theme="dark"] .taxonomy-item{color:#d9b694}
-[data-theme="dark"] .taxonomy-item>span:last-child{color:#bca082}
-[data-theme="dark"] .taxonomy-item:hover{color:#f0ceaa}
+
 [data-theme="dark"] :is(.about-intro>.eyebrow,.about-intro blockquote){color:#bfa184}
 [data-theme="dark"] .about-intro p:not(.eyebrow){color:#c9b19a}
 [data-theme="dark"] .about-github{color:#dbb08c;border-bottom-color:#96714f}

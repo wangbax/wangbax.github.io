@@ -13,13 +13,11 @@ from urllib.parse import urlsplit
 
 
 SITE_DIRECTORIES = {
-    "2016", "2017", "about", "archives", "categories", "css",
-    "images", "js", "link", "page", "project", "search", "tags",
+    "2016", "2017", "about", "archives", "css",
+    "images", "js", "project", "search",
 }
 SITE_FILES = {
-    "index.html", "404.html", "favicon.ico", "search.xml",
-    "BingSiteAuth.xml", "sogousiteverification.txt",
-    "google954e5c596c6310df.html",
+    "index.html", "404.html", "search.xml",
 }
 
 
