@@ -28,7 +28,7 @@ jobs:
           python3 -m py_compile scripts/package_site.py scripts/check_site.py scripts/ci_deploy.py
       - name: Build and validate the site
         env:
-          SITE_URL: ${{ vars.SITE_URL || 'http://101.132.127.138' }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://www.wangbaxai.top' }}
         run: |
           python3 scripts/package_site.py --site-url "$SITE_URL"
           python3 scripts/check_site.py .release/site.tar.gz
