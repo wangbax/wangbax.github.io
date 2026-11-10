@@ -30,7 +30,7 @@ jobs:
       - name: Check deployment scripts
         run: |
           bash -n deploy/publish.sh scripts/install_workbench.sh
-          python3 -m py_compile scripts/package_site.py scripts/check_site.py scripts/ci_deploy.py scripts/render_site.py scripts/markdown_posts.py scripts/optimize_images.py
+          python3 -m py_compile scripts/package_site.py scripts/check_site.py scripts/ci_deploy.py scripts/sync_generated.py scripts/render_site.py scripts/markdown_posts.py scripts/optimize_images.py
           python3 -m unittest discover -s tests
           node --check js/site.js
           node --check js/theme.js
@@ -52,20 +52,31 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          persist-credentials: false
+          persist-credentials: true
       - name: Install site build dependencies
         run: |
           python3 -m venv .venv
           .venv/bin/python -m pip install -r requirements.txt
           echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+      - name: Build and validate generated files
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://www.wangbaxai.top' }}
+        run: |
+          python3 scripts/package_site.py --site-url "$SITE_URL"
+          python3 scripts/check_site.py .release/site.tar.gz
+      - name: Commit generated files to main
+        id: generated
+        run: python3 scripts/sync_generated.py
       - name: Install Workbench CLI
+        if: steps.generated.outputs.ready == 'true'
         run: bash scripts/install_workbench.sh
       - name: Obtain temporary Alibaba Cloud credentials
+        if: steps.generated.outputs.ready == 'true'
         uses: aliyun/configure-aliyun-credentials-action@1e5248c8d5d93a8781ac344a68e19a43341e79e6 # v1
         with:
           oidc-provider-arn: ${{ vars.ALIBABA_CLOUD_OIDC_PROVIDER_ARN }}
@@ -74,6 +85,7 @@ jobs:
           role-session-expiration: 1800
           audience: sts.aliyuncs.com
       - name: Package, publish and verify
+        if: steps.generated.outputs.ready == 'true'
         env:
           SITE_URL: ${{ vars.SITE_URL }}
           ECS_INSTANCE_ID: ${{ vars.ECS_INSTANCE_ID }}
