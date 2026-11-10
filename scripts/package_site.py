@@ -17,8 +17,9 @@ SITE_DIRECTORIES = {
     "images", "js", "project", "search",
 }
 SITE_FILES = {
-    "index.html", "404.html", "search.xml",
+    "index.html", "404.html", "search.json",
 }
+SOURCE_ASSETS = {"css/site.css", "css/pages.css", "css/theme.css", "js/theme.js"}
 
 
 def main():
@@ -48,6 +49,8 @@ def main():
         if not encoded_name:
             continue
         name = encoded_name.decode("utf-8")
+        if name in SOURCE_ASSETS:
+            continue
         relative = Path(name)
         if relative.parts[0] not in SITE_DIRECTORIES and name not in SITE_FILES:
             continue
@@ -57,19 +60,20 @@ def main():
         if not path.is_file():
             raise SystemExit("Tracked site file is missing: " + name)
         selected.append((name, path))
-    required = {"index.html", "404.html", "css/site.css", "css/pages.css", "css/theme.css", "js/theme.js", "js/site.js", "js/planet.js", "search.xml"}
+    required = {"index.html", "404.html", "css/app.css", "js/site.js", "js/article.js", "js/search.js", "js/planet.js", "search.json"}
     if not required.issubset({name for name, _ in selected}):
         raise SystemExit("Required site files are missing")
 
     output = args.output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+    files = precompressed = text_bytes = gzip_bytes = 0
     with output.open("wb") as raw:
         with gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as compressed:
             with tarfile.open(fileobj=compressed, mode="w|") as archive:
                 for name, path in sorted(selected):
                     content = path.read_bytes()
-                    if path.suffix in {".html", ".xml"}:
+                    if path.suffix in {".html", ".json"}:
                         for source_origin in (b"https://www.wangbaxai.top", b"http://www.wangbaxai.top"):
                             content = content.replace(source_origin, origin.encode("utf-8"))
                     info = tarfile.TarInfo(name)
@@ -77,9 +81,25 @@ def main():
                     info.mode = 0o644
                     info.mtime = 0
                     archive.addfile(info, io.BytesIO(content))
+                    files += 1
+                    if path.suffix in {".html", ".css", ".js", ".json"} and len(content) >= 512:
+                        buffer = io.BytesIO()
+                        with gzip.GzipFile(filename="", mode="wb", fileobj=buffer, compresslevel=9, mtime=0) as compressed_file:
+                            compressed_file.write(content)
+                        compressed_content = buffer.getvalue()
+                        info = tarfile.TarInfo(name + ".gz")
+                        info.size = len(compressed_content)
+                        info.mode = 0o644
+                        info.mtime = 0
+                        archive.addfile(info, io.BytesIO(compressed_content))
+                        files += 1
+                        precompressed += 1
+                        text_bytes += len(content)
+                        gzip_bytes += len(compressed_content)
 
     manifest = {
-        "site_url": origin, "source_commit": commit, "files": len(selected),
+        "site_url": origin, "source_commit": commit, "files": files,
+        "precompressed_files": precompressed, "text_bytes": text_bytes, "gzip_bytes": gzip_bytes,
         "archive": output.name, "sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
     }
     output.with_suffix(".json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + chr(10))

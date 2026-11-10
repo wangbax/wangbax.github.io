@@ -42,13 +42,14 @@ install -d -m 755 "$site_base" "${site_base}/releases" "$release_dir"
 tar --extract --gzip --file "$archive" --directory "$release_dir" --no-same-owner --no-same-permissions
 test -f "${release_dir}/index.html"
 test -f "${release_dir}/404.html"
-test -f "${release_dir}/css/site.css"
-test -f "${release_dir}/css/pages.css"
-test -f "${release_dir}/css/theme.css"
-test -f "${release_dir}/js/theme.js"
+test -f "${release_dir}/css/app.css"
 test -f "${release_dir}/js/site.js"
+test -f "${release_dir}/js/article.js"
+test -f "${release_dir}/js/search.js"
 test -f "${release_dir}/js/planet.js"
-test -f "${release_dir}/search.xml"
+test -f "${release_dir}/search.json"
+test -f "${release_dir}/css/app.css.gz"
+test -f "${release_dir}/search.json.gz"
 find "$release_dir" -type d -exec chmod 755 {} +
 find "$release_dir" -type f -exec chmod 644 {} +
 # Refresh HTTP validators even when deterministic files keep the same size.

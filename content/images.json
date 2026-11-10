@@ -1,0 +1,144 @@
+{
+  "/images/2016/20160803143922-1.png": {
+    "width": 1023,
+    "height": 600,
+    "animated": false,
+    "source_sha256": "29b018012ffba5b0305a2cf8fdcfe5cb4973a4ed0ca8e2c78733bce7196a0f42",
+    "variants": [
+      {
+        "path": "/images/optimized/2016/20160803143922-1-480.webp",
+        "width": 480,
+        "bytes": 9812,
+        "lossless": false
+      },
+      {
+        "path": "/images/optimized/2016/20160803143922-1-1023.webp",
+        "width": 1023,
+        "bytes": 15974,
+        "lossless": true
+      }
+    ]
+  },
+  "/images/2016/20160803143922-3.png": {
+    "width": 1080,
+    "height": 1920,
+    "animated": false,
+    "source_sha256": "a45b1fd4b47af1587b7d17eb749b48a301f31c66c32ea90a341d8b83e9491795",
+    "variants": [
+      {
+        "path": "/images/optimized/2016/20160803143922-3-480.webp",
+        "width": 480,
+        "bytes": 45446,
+        "lossless": false
+      },
+      {
+        "path": "/images/optimized/2016/20160803143922-3-1080.webp",
+        "width": 1080,
+        "bytes": 76710,
+        "lossless": true
+      }
+    ]
+  },
+  "/images/2017/20170118112352.gif": {
+    "width": 373,
+    "height": 661,
+    "animated": true,
+    "source_sha256": "1385f7dd2086f72899d063d872b2e2bc7fdfe84287edd7e2b830e0312c427cc2",
+    "variants": [
+      {
+        "path": "/images/optimized/2017/20170118112352-373.webp",
+        "width": 373,
+        "bytes": 16642,
+        "lossless": true
+      }
+    ]
+  },
+  "/images/2017/20170419144912.jpeg": {
+    "width": 640,
+    "height": 315,
+    "animated": false,
+    "source_sha256": "5ae42c8f7587e2892f4f0b16a145fa312063473bd460e9caa56df9e0260bc71d",
+    "variants": [
+      {
+        "path": "/images/optimized/2017/20170419144912-640.webp",
+        "width": 640,
+        "bytes": 15258,
+        "lossless": false
+      }
+    ]
+  },
+  "/images/2017/20170424121353.png": {
+    "width": 357,
+    "height": 163,
+    "animated": false,
+    "source_sha256": "2ba4e7da4607e5d26d8656fb451dac55ce84d783a18d9001079176c93c58f688",
+    "variants": [
+      {
+        "path": "/images/optimized/2017/20170424121353-357.webp",
+        "width": 357,
+        "bytes": 10544,
+        "lossless": true
+      }
+    ]
+  },
+  "/images/2017/20170424121603.png": {
+    "width": 315,
+    "height": 152,
+    "animated": false,
+    "source_sha256": "90018994d5cb912a3bec1ecd9b89a6487583b68da075add2b98132f32ac4048e",
+    "variants": [
+      {
+        "path": "/images/optimized/2017/20170424121603-315.webp",
+        "width": 315,
+        "bytes": 8072,
+        "lossless": true
+      }
+    ]
+  },
+  "/images/2017/20170607163800.jpg": {
+    "width": 326,
+    "height": 349,
+    "animated": false,
+    "source_sha256": "4bdef14c54e56fff9fef4942273c0e42274ae76470c5b7d223f9e5b37c58c0f3",
+    "variants": [
+      {
+        "path": "/images/optimized/2017/20170607163800-326.webp",
+        "width": 326,
+        "bytes": 10108,
+        "lossless": false
+      }
+    ]
+  },
+  "/images/avatar.png": {
+    "width": 300,
+    "height": 300,
+    "animated": false,
+    "source_sha256": "2fbae07146dd22bba28395e6802f7f8aa2ebc0f7acbc6c152d0372a373739773",
+    "variants": [
+      {
+        "path": "/images/optimized/avatar-64.webp",
+        "width": 64,
+        "bytes": 2996,
+        "lossless": true
+      },
+      {
+        "path": "/images/optimized/avatar-96.webp",
+        "width": 96,
+        "bytes": 5360,
+        "lossless": true
+      },
+      {
+        "path": "/images/optimized/avatar-160.webp",
+        "width": 160,
+        "bytes": 10790,
+        "lossless": true
+      },
+      {
+        "path": "/images/optimized/avatar-300.webp",
+        "width": 300,
+        "bytes": 22708,
+        "lossless": true
+      }
+    ]
+  }
+}
