@@ -124,7 +124,7 @@ class MarkdownPostsTest(unittest.TestCase):
             root = Path(directory)
             for name in ["scripts", "css", "js", "images"]:
                 shutil.copytree(ROOT / name, root / name, ignore=shutil.ignore_patterns("__pycache__"))
-            shutil.copytree(ROOT / "content", root / "content", ignore=shutil.ignore_patterns("posts", "posts.json"))
+            shutil.copytree(ROOT / "content", root / "content", ignore=shutil.ignore_patterns("posts"))
             posts = root / "content/posts"
             posts.mkdir()
             def post(name, date):
