@@ -5,24 +5,9 @@
     "url": "/2017/08/17/wt-alpha/",
     "published": "2017-08-17T17:08:05+08:00",
     "updated": "2017-08-17T17:08:05+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "Tools",
-        "url": "/categories/Dev/Tools/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Tools",
-        "url": "/tags/Tools/"
-      }
-    ],
     "summary": "由于项目实际开发中，设计师习惯报百分比形容颜色透明度，每次都需要手动换算，非常麻烦，故记录一些常用的透明度换算。",
-    "body": "posts/wt-alpha.html"
+    "body": "posts/wt-alpha.html",
+    "category": "Tools"
   },
   {
     "slug": "wt-android-drawable-issue",
@@ -30,24 +15,9 @@
     "url": "/2017/06/14/wt-android-drawable-issue/",
     "published": "2017-06-14T18:56:09+08:00",
     "updated": "2017-06-14T18:56:09+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "Android",
-        "url": "/categories/Dev/Android/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Android",
-        "url": "/tags/Android/"
-      }
-    ],
     "summary": "开发过程中，部分用户( 华为 NXT-AL10,华为 MHA AL00 等)反馈只要弹框就会崩溃，通过反馈用户的协助，找到日志如下：",
-    "body": "posts/wt-android-drawable-issue.html"
+    "body": "posts/wt-android-drawable-issue.html",
+    "category": "Android"
   },
   {
     "slug": "wt-android-inputconnection",
@@ -55,24 +25,9 @@
     "url": "/2017/04/24/wt-android-inputconnection/",
     "published": "2017-04-24T11:34:52+08:00",
     "updated": "2017-06-07T17:16:27+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "Android",
-        "url": "/categories/Dev/Android/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Android",
-        "url": "/tags/Android/"
-      }
-    ],
     "summary": "开发过程中，查看Bugly时，发现在部分机型（酷派，说的就是你），只要点击了自定义的 InputConnection 的 WebView ，程序就会直接Crash，Bugly中崩溃日志如下：",
-    "body": "posts/wt-android-inputconnection.html"
+    "body": "posts/wt-android-inputconnection.html",
+    "category": "Android"
   },
   {
     "slug": "wt-php-develop-env",
@@ -80,36 +35,9 @@
     "url": "/2017/04/19/wt-php-develop-env/",
     "published": "2017-04-19T15:12:13+08:00",
     "updated": "2017-04-19T15:12:13+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "PHP",
-        "url": "/categories/Dev/PHP/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "PHP",
-        "url": "/tags/PHP/"
-      },
-      {
-        "name": "Valet",
-        "url": "/tags/Valet/"
-      },
-      {
-        "name": "Composer",
-        "url": "/tags/Composer/"
-      },
-      {
-        "name": "Mac",
-        "url": "/tags/Mac/"
-      }
-    ],
     "summary": "根据自身情况直接装 mac 开发环境，或选用Valet或者Docker搭建",
-    "body": "posts/wt-php-develop-env.html"
+    "body": "posts/wt-php-develop-env.html",
+    "category": "PHP"
   },
   {
     "slug": "wt-android-gson-tojson",
@@ -117,28 +45,9 @@
     "url": "/2017/04/19/wt-android-gson-tojson/",
     "published": "2017-04-19T14:31:44+08:00",
     "updated": "2017-06-07T17:05:42+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "Android",
-        "url": "/categories/Dev/Android/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Android",
-        "url": "/tags/Android/"
-      },
-      {
-        "name": "Gson",
-        "url": "/tags/Gson/"
-      }
-    ],
     "summary": "使用Gson过程中，在调用其 Gson.toJson(Object src) 时，一直报 java.lang.IllegalArgumentException ，异常代码如下：",
-    "body": "posts/wt-android-gson-tojson.html"
+    "body": "posts/wt-android-gson-tojson.html",
+    "category": "Android"
   },
   {
     "slug": "wt-php-install",
@@ -146,24 +55,9 @@
     "url": "/2017/04/14/wt-php-install/",
     "published": "2017-04-14T18:15:07+08:00",
     "updated": "2017-06-08T11:03:45+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "PHP",
-        "url": "/categories/Dev/PHP/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "PHP",
-        "url": "/tags/PHP/"
-      }
-    ],
     "summary": "在PHP安装和配置过程中，遇到一个坑，当配置nginx.conf时，项目路径 root 设置为非Nginx默认路径 /usr/local/var/www ,比如 /Users/wt/Documents/workspace_php/Test 时，会一直报403 Forbidden.",
-    "body": "posts/wt-php-install.html"
+    "body": "posts/wt-php-install.html",
+    "category": "PHP"
   },
   {
     "slug": "wt-viewpager-requestlayout",
@@ -171,32 +65,9 @@
     "url": "/2017/03/28/wt-viewpager-requestlayout/",
     "published": "2017-03-28T11:38:59+08:00",
     "updated": "2017-06-08T11:03:52+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "Android",
-        "url": "/categories/Dev/Android/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Android",
-        "url": "/tags/Android/"
-      },
-      {
-        "name": "ViewPager",
-        "url": "/tags/ViewPager/"
-      },
-      {
-        "name": "View.requestLayout()",
-        "url": "/tags/View-requestLayout/"
-      }
-    ],
     "summary": "在实际开发过程中，使用到 ViewPager + Fragment 的方式进行显示布局。由于存在需求缓存已加载的 Fragment ，故自定义了 FragmentAdapter ，不 destoryItem ，仅仅注释了 destroyItem 方法里的操作，代码 NoDestr",
-    "body": "posts/wt-viewpager-requestlayout.html"
+    "body": "posts/wt-viewpager-requestlayout.html",
+    "category": "Android"
   },
   {
     "slug": "wt-android-studio-show-sdkmanager",
@@ -204,28 +75,9 @@
     "url": "/2017/03/17/wt-android-studio-show-sdkmanager/",
     "published": "2017-03-17T10:45:49+08:00",
     "updated": "2017-06-08T11:03:23+08:00",
-    "categories": [
-      {
-        "name": "IDE",
-        "url": "/categories/IDE/"
-      },
-      {
-        "name": "Android Studio",
-        "url": "/categories/IDE/Android-Studio/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Android Studio",
-        "url": "/tags/Android-Studio/"
-      },
-      {
-        "name": "SDKManager",
-        "url": "/tags/SDKManager/"
-      }
-    ],
     "summary": "更新了AndroidStudio2.3正式版之后，之前可以在Preferences - Android SDK中的 Launch Standalone SDK Manager 按钮被隐藏了。",
-    "body": "posts/wt-android-studio-show-sdkmanager.html"
+    "body": "posts/wt-android-studio-show-sdkmanager.html",
+    "category": "Android Studio"
   },
   {
     "slug": "wt-circle-animation-drawable",
@@ -233,24 +85,9 @@
     "url": "/2017/01/18/wt-circle-animation-drawable/",
     "published": "2017-01-18T10:18:10+08:00",
     "updated": "2017-06-08T11:03:36+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "Android",
-        "url": "/categories/Dev/Android/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Android",
-        "url": "/tags/Android/"
-      }
-    ],
     "summary": "受这篇博客 #Android# 轮子杂评 启发，重写了之前写的这个空间实现这个效果。 Github链接 在此。",
-    "body": "posts/wt-circle-animation-drawable.html"
+    "body": "posts/wt-circle-animation-drawable.html",
+    "category": "Android"
   },
   {
     "slug": "wt-android-intent-market",
@@ -258,24 +95,9 @@
     "url": "/2016/08/15/wt-android-intent-market/",
     "published": "2016-08-15T14:49:27+08:00",
     "updated": "2016-11-17T18:30:50+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "Android",
-        "url": "/categories/Dev/Android/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Android",
-        "url": "/tags/Android/"
-      }
-    ],
     "summary": "开发中遇到了设置自己应用某页面为系统商店页面。",
-    "body": "posts/wt-android-intent-market.html"
+    "body": "posts/wt-android-intent-market.html",
+    "category": "Android"
   },
   {
     "slug": "wt-android-methods",
@@ -283,24 +105,9 @@
     "url": "/2016/08/08/wt-android-methods/",
     "published": "2016-08-08T11:49:29+08:00",
     "updated": "2016-08-15T16:31:27+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "Android",
-        "url": "/categories/Dev/Android/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Android",
-        "url": "/tags/Android/"
-      }
-    ],
     "summary": "保存平时收集到的常用方法，以便以后调用。",
-    "body": "posts/wt-android-methods.html"
+    "body": "posts/wt-android-methods.html",
+    "category": "Android"
   },
   {
     "slug": "wt-center-image-span",
@@ -308,23 +115,8 @@
     "url": "/2016/08/03/wt-center-image-span/",
     "published": "2016-08-03T14:39:22+08:00",
     "updated": "2017-06-07T17:04:32+08:00",
-    "categories": [
-      {
-        "name": "Dev",
-        "url": "/categories/Dev/"
-      },
-      {
-        "name": "Android",
-        "url": "/categories/Dev/Android/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Android",
-        "url": "/tags/Android/"
-      }
-    ],
     "summary": "开发中需要为TextView头尾添加标签图片，并且 尾部标签不被挤出 ，考虑了几种可能的方案：",
-    "body": "posts/wt-center-image-span.html"
+    "body": "posts/wt-center-image-span.html",
+    "category": "Android"
   }
 ]
