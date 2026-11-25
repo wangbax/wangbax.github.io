@@ -130,7 +130,7 @@ def header(active=""):
 
 
 def footer():
-    return f'''<footer class="wrap foot"><span class="signature">© {SITE['copyright_year']} wangbax</span><div><a href="/project/">项目</a><a href="/archives/">文章</a><a href="/about/">关于我</a><a href="{e(SITE['github'])}" target="_blank" rel="noopener">GitHub ↗</a></div></footer>'''
+    return f'''<footer class="wrap foot"><span class="signature">© {SITE['copyright_year']} wangbax</span><div><a href="/project/">项目</a><a href="/archives/">文章</a><a href="/about/">关于我</a><a href="{e(SITE['github'])}" target="_blank" rel="noopener">GitHub ↗</a><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">{e(SITE['icp_number'])}</a></div></footer>'''
 
 
 def search_form(standalone=False):
